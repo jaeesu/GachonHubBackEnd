@@ -18,8 +18,6 @@ public class TokenProvider {
 
     private final AppProperties appProperties;
 
-    private SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-
     //토큰 생성
     public String createToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
@@ -31,8 +29,8 @@ public class TokenProvider {
                 .setSubject(Long.toString(userPrincipal.getId()))
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
-//                .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
-                .signWith(SignatureAlgorithm.HS512, key)
+                .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
+//                .signWith(SignatureAlgorithm.HS512, key)
                 .compact();
     }
 
@@ -42,6 +40,7 @@ public class TokenProvider {
                 .setSigningKey(appProperties.getAuth().getTokenSecret())
                 .parseClaimsJws(token)
                 .getBody();
+        log.debug("get user id from token => {}", claims.toString());
 
         return Long.parseLong(claims.getSubject());
     }
@@ -49,7 +48,8 @@ public class TokenProvider {
     //토큰의 유효성 확인
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(appProperties.getAuth().getTokenSecret()).parseClaimsJws(authToken);
+//            log.debug("token validate check => try");
+//            Jwts.parser().setSigningKey(appProperties.getAuth().getTokenSecret()).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException ex) {
             log.error("Invalid JWT signature");
@@ -61,6 +61,8 @@ public class TokenProvider {
             log.error("Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
             log.error("JWT claims string is empty.");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }

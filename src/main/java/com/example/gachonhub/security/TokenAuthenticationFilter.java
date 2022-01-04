@@ -19,30 +19,32 @@ import java.io.IOException;
 @Slf4j
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
+    @Autowired
     private TokenProvider tokenProvider;
-
+    @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-//    private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
-
-
-    public TokenAuthenticationFilter() {
-    }
-
-    @Autowired
-    public TokenAuthenticationFilter(TokenProvider tokenProvider, CustomUserDetailsService customUserDetailsService) {
-        this.tokenProvider = tokenProvider;
-        this.customUserDetailsService = customUserDetailsService;
-    }
+    /** */
+//    public TokenAuthenticationFilter() {
+//    }
+//
+//    @Autowired
+//    public TokenAuthenticationFilter(TokenProvider tokenProvider, CustomUserDetailsService customUserDetailsService) {
+//        this.tokenProvider = tokenProvider;
+//        this.customUserDetailsService = customUserDetailsService;
+//    }
 
     //토큰 내부 필터
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.debug("TokenAuthenticationFilter => doFtilerInternal");
         try {
             String jwt = getJwtFromRequest(request);
+            log.debug("TokenAuthenticationFilter => jwt token : {}", jwt);
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 Long userId = tokenProvider.getUserIdFromToken(jwt);
+                log.debug("TokenAuthenticationFilter => userId parsing : {}", userId);
 
                 UserDetails userDetails = customUserDetailsService.loadUserById(userId);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -59,10 +61,12 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     //토큰 parsing
     private String getJwtFromRequest(HttpServletRequest request) {
+        log.debug("TokenAuthenticationFilter => token parsing");
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7, bearerToken.length());
         }
         return null;
     }
+
 }
