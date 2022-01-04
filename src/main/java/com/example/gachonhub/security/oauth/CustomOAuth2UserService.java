@@ -1,8 +1,10 @@
 package com.example.gachonhub.security.oauth;
 
 import com.example.gachonhub.domain.user.User;
+import com.example.gachonhub.domain.user.User.Role;
 import com.example.gachonhub.domain.user.UserRepository;
 import com.example.gachonhub.exception.OAuth2AuthenticationProcessingException;
+import com.example.gachonhub.security.AppProperties;
 import com.example.gachonhub.security.UserPrincipal;
 import com.example.gachonhub.util.Utils;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ import java.util.Optional;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
+    private final AppProperties appProperties;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -42,19 +45,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) throws OAuth2AuthenticationProcessingException {
         log.debug("Oauth2 => custom user service : processOAuth2User");
-        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
-        log.info(oAuth2UserInfo.getId() + "  " + oAuth2UserInfo.getEmail() + "  " + oAuth2UserInfo.getName() + "  " + oAuth2UserInfo.getAttributes());
-        /**
-         * email null error 처리 후 손보기
-         */
-        if (StringUtils.isEmpty(oAuth2UserInfo.getId())) {
-            throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
-        }
-//        if(StringUtils.isEmpty(oAuth2UserInfo.getEmail()) && StringUtils.isEmpty(oAuth2UserInfo.getName())) {
-//            throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
-//        }
 
-        Optional<User> userOptional = userRepository.findByName(oAuth2UserInfo.getAttributes().get("login").toString());
+        //request의 정보를 들고와서 GithubOauth2Userinfo 만들기
+        GithubOAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
+
+        if (!StringUtils.hasText(oAuth2UserInfo.getId())) {
+            throw new OAuth2AuthenticationProcessingException("Id not found from OAuth2 provider");
+        }
+
+        Optional<User> userOptional = userRepository.findByNickname(oAuth2UserInfo.getNickName());
         User user;
         if(userOptional.isPresent()) {
             user = userOptional.get();
@@ -71,31 +70,34 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return UserPrincipal.create(user, oAuth2User.getAttributes());
     }
 
-    private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
+    private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, GithubOAuth2UserInfo oAuth2UserInfo) {
         log.info("Oauth2 => custom user service : registerNewUser");
         log.info("request => " + oAuth2UserRequest.getAdditionalParameters().toString());
-//        User user = new User();
 
-        /**
-         * email => null error (email로 로그인한 경우도 마찬가지)
-         * 이미 존재하는 경우 잘 통과되는 것 확인
-         */
-        log.info("email : " + oAuth2UserInfo.getEmail());
-        log.info("email2 :" + oAuth2UserInfo.getAttributes().toString());
+        Role role = (oAuth2UserInfo.getNickName().equals(appProperties.getGithub().getDeveloperId())) ?
+                Role.ADMIN : Role.USER;
 
+        log.debug("getnickname : {}", oAuth2UserInfo.getNickName() + "     " + appProperties.getGithub().getDeveloperId());
         User user = User.builder()
                 .id(Long.parseLong(oAuth2UserInfo.getId()))
-                .email((oAuth2UserInfo.getEmail() == null) ? "test@email.com" : oAuth2UserInfo.getEmail())
-                .name(oAuth2UserInfo.getAttributes().get("login").toString())
-//                .password("hello")
+                .email(oAuth2UserInfo.getEmail())
+                .nickname(oAuth2UserInfo.getNickName())
+                .name(oAuth2UserInfo.getName())
+                .avatar_url(oAuth2UserInfo.getImageUrl())
+                .home_url(oAuth2UserInfo.getHomeUrl())
+                .blog(oAuth2UserInfo.getBlog())
+                .company(oAuth2UserInfo.getCompany())
+                .created_at(oAuth2UserInfo.getCreatedAt())
+                .updated_at(oAuth2UserInfo.getUpdatedAt())
+                .role(role)
                 .build();
         return userRepository.save(user);
     }
 
-    private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
+    private User updateExistingUser(User existingUser, GithubOAuth2UserInfo oAuth2UserInfo) {
         log.info("Oauth2 => custom user service : updateExistingUser");
-        existingUser.setName(oAuth2UserInfo.getName());
-        existingUser.setImgUrl(oAuth2UserInfo.getImageUrl());
+//        existingUser.setName(oAuth2UserInfo.getName());
+//        existingUser.setImgUrl(oAuth2UserInfo.getImageUrl());
         return userRepository.save(existingUser);
     }
 }

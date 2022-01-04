@@ -19,8 +19,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.sql.DataSource;
 
 @Slf4j
 @Configuration
@@ -33,12 +34,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final DataSource dataSource;
+
     private final AppProperties appProperties;
     private final CustomUserDetailsService customUserDetailsService;
 
     private final CustomOAuth2UserService customOAuth2UserService;
     //spring security의 DefaultOAuth2UserService를 상속, loadUser() 메서드를 implements
     //이 메서드는 공급자로부터 access token을 얻은 다음 호출
+    //공급자로부터 사용자의 세부사항을 fetch한다. 이미 데이터베이스에 동일한 메일의 사용자가 존재한다면 그의 세부사항을 업데이트, 그렇지 않으면 새로운 유저 등록
     //공급자로부터 사용자의 세부사항을 fetch한다. 이미 데이터베이스에 동일한 메일의 사용자가 존재한다면 그의 세부사항을 업데이트, 그렇지 않으면 새로운 유저 등록
 
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
@@ -71,19 +75,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         log.debug("security config -> configure1");
-        authenticationManagerBuilder
-                .userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder());
-        authenticationManagerBuilder
-                .inMemoryAuthentication()
-                .passwordEncoder(passwordEncoder())
-                .withUser(appProperties.getGithub().getDeveloperId())
-                .password(appProperties.getGithub().getDeveloperPassword())
-                .roles(String.valueOf(User.Role.USER));
+        authenticationManagerBuilder.jdbcAuthentication().dataSource(dataSource);
 
-        authenticationManagerBuilder
-                .userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder());
+//        authenticationManagerBuilder
+//                .userDetailsService(customUserDetailsService)
+//                .passwordEncoder(passwordEncoder());
+//        authenticationManagerBuilder
+//                .inMemoryAuthentication()
+//                .passwordEncoder(passwordEncoder())
+//                .withUser(appProperties.getGithub().getDeveloperId())
+//                .password(appProperties.getGithub().getDeveloperPassword())
+//                .roles(String.valueOf(User.Role.USER));
 
     }
 
@@ -121,6 +123,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                     .antMatchers("/",
                             "/login",
+                            "/role",
                             "/login/oauth2/**",
                             "/error",
                             "/favicon.ico",
@@ -135,13 +138,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/auth/**", "/oauth2/**")
                     .permitAll()
                     .antMatchers("/test")
-                    .hasRole(User.Role.USER.name()) //role이 지정되지 않은 사용자일때 된다...?
+//                    .hasRole(User.Role.USER.name()) //role이 지정되지 않은 사용자일때 된다...?
+                    .hasAnyRole(User.Role.USER.name(), User.Role.ADMIN.name())
                     .anyRequest()
                     .authenticated()
                 .and()
                     .oauth2Login()
                     .authorizationEndpoint()
-    //                .authorizationRequestResolver(new CustomAuthorizationRequestResolver(clientRegistrationRepository))
                     .baseUri("/oauth2/authorize")
                     .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
                 .and()

@@ -24,6 +24,7 @@ public class Group {
 
     private String repos;
 
+    @Enumerated(EnumType.STRING)
     private GroupType type;
 
     private String description;
