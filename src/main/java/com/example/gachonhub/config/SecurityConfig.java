@@ -1,12 +1,12 @@
 package com.example.gachonhub.config;
 
 import com.example.gachonhub.domain.user.User;
+import com.example.gachonhub.security.AppProperties;
 import com.example.gachonhub.security.RestAuthenticationEntryPoint;
 import com.example.gachonhub.security.TokenAuthenticationFilter;
 import com.example.gachonhub.security.oauth.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,12 +33,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${github.developerId}")
-    private String developerId;
-
-    @Value("${github.developerPassword}")
-    private String developerPassword;
-
+    private final AppProperties appProperties;
     private final CustomUserDetailsService customUserDetailsService;
 
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -56,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //반환받은 state 파라미커 값을 최초에 받은 것과 비교?
     //not match : 요청 거부
     //따라서 인증 값을 리턴 받은 수에도 상태 파라미터를 가지고 있어야 한다. -> redirect_uri과 같은 것에 short-lived cookie로 저장
+
 
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
@@ -81,8 +77,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationManagerBuilder
                 .inMemoryAuthentication()
                 .passwordEncoder(passwordEncoder())
-                .withUser(developerId)
-                .password(passwordEncoder().encode(developerPassword))
+                .withUser(appProperties.getGithub().getDeveloperId())
+                .password(appProperties.getGithub().getDeveloperPassword())
                 .roles(String.valueOf(User.Role.USER));
 
         authenticationManagerBuilder
@@ -110,52 +106,53 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors()
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .csrf()
-                .disable()
-                .formLogin()
-                .disable()
-                .httpBasic()
-                .disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                    .csrf()
+                    .disable()
+                    .formLogin()
+                    .disable()
+                    .httpBasic()
+                    .disable()
+                    .exceptionHandling()
+                    .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .and()
-                .authorizeRequests()
-                .antMatchers("/",
-                        "/login",
-                        "/oauth",
-                        "/login/oauth2/**",
-                        "/error",
-                        "/favicon.ico",
-                        "/**/*.png",
-                        "/**/*.gif",
-                        "/**/*.svg",
-                        "/**/*.jpg",    //여기에 요청 api 포함해두면 프론트에 따로 뭔가를 넘길 필요없이 프론트가 요청하면 이동하도록 하기
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js")
-                .permitAll()
-                .antMatchers("/auth/**", "/oauth2/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+                    .authorizeRequests()
+                    .antMatchers("/",
+                            "/login",
+                            "/login/oauth2/**",
+                            "/error",
+                            "/favicon.ico",
+                            "/**/*.png",
+                            "/**/*.gif",
+                            "/**/*.svg",
+                            "/**/*.jpg",    //여기에 요청 api 포함해두면 프론트에 따로 뭔가를 넘길 필요없이 프론트가 요청하면 이동하도록 하기
+                            "/**/*.html",
+                            "/**/*.css",
+                            "/**/*.js")
+                    .permitAll()
+                    .antMatchers("/auth/**", "/oauth2/**")
+                    .permitAll()
+                    .antMatchers("/test")
+                    .hasRole(User.Role.USER.name()) //role이 지정되지 않은 사용자일때 된다...?
+                    .anyRequest()
+                    .authenticated()
                 .and()
-                .oauth2Login()
-                .authorizationEndpoint()
-//                .authorizationRequestResolver(new CustomAuthorizationRequestResolver(clientRegistrationRepository))
-                .baseUri("/oauth2/authorize")
-                .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
+                    .oauth2Login()
+                    .authorizationEndpoint()
+    //                .authorizationRequestResolver(new CustomAuthorizationRequestResolver(clientRegistrationRepository))
+                    .baseUri("/oauth2/authorize")
+                    .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
                 .and()
-                .redirectionEndpoint()
-                .baseUri("/login/oauth2/code/*")
+                    .redirectionEndpoint()
+                    .baseUri("/login/oauth2/code/*")
                 .and()
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService)
+                    .userInfoEndpoint()
+                    .userService(customOAuth2UserService) /** */
                 .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler)
-                .failureHandler(oAuth2AuthenticationFailureHandler);
+                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                    .failureHandler(oAuth2AuthenticationFailureHandler);
 
         // Add our custom Token based authentication filter
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
