@@ -75,20 +75,16 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         log.info("client : " + clientRedirectUri.getHost());
 //        log.info("authorization : " + appProperties.getOauth2().getAuthorizedRedirectUris());
-        log.info("authorization : " + appProperties.getAuthorizedRedirectUris());
+        log.info("authorization : " + appProperties.getAuth().getAuthorizedRedirectUri());
 
 
 //        return appProperties.getOauth2().getAuthorizedRedirectUris()
-        return appProperties.getAuthorizedRedirectUris()
-                .stream()
-                .anyMatch(authorizedRedirectUri -> {
-                    // Only validate host and port. Let the clients use different paths if they want to
-                    URI authorizedURI = URI.create(authorizedRedirectUri);
-                    if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-                            && authorizedURI.getPort() == clientRedirectUri.getPort()) {
-                        return true;
-                    }
-                    return false;
-                });
+
+        URI authorizedURI = URI.create(appProperties.getAuth().getAuthorizedRedirectUri());
+        if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+                && authorizedURI.getPort() == clientRedirectUri.getPort()) {
+            return true;
+        }
+        return false;
     }
 }
