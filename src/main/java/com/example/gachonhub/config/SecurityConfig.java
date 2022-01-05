@@ -36,9 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final DataSource dataSource;
 
-    private final AppProperties appProperties;
-    private final CustomUserDetailsService customUserDetailsService;
-
     private final CustomOAuth2UserService customOAuth2UserService;
     //spring security의 DefaultOAuth2UserService를 상속, loadUser() 메서드를 implements
     //이 메서드는 공급자로부터 access token을 얻은 다음 호출
@@ -62,11 +59,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new TokenAuthenticationFilter();
     }
 
-    /*
-      By default, Spring OAuth2 uses HttpSessionOAuth2AuthorizationRequestRepository to save
-      the authorization request. But, since our service is stateless, we can't save it in
-      the session. We'll save the request in a Base64 encoded cookie instead.
-    */
     @Bean
     public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
         return new HttpCookieOAuth2AuthorizationRequestRepository();
@@ -76,16 +68,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         log.debug("security config -> configure1");
         authenticationManagerBuilder.jdbcAuthentication().dataSource(dataSource);
-
-//        authenticationManagerBuilder
-//                .userDetailsService(customUserDetailsService)
-//                .passwordEncoder(passwordEncoder());
-//        authenticationManagerBuilder
-//                .inMemoryAuthentication()
-//                .passwordEncoder(passwordEncoder())
-//                .withUser(appProperties.getGithub().getDeveloperId())
-//                .password(appProperties.getGithub().getDeveloperPassword())
-//                .roles(String.valueOf(User.Role.USER));
 
     }
 
@@ -123,7 +105,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                     .antMatchers("/",
                             "/login",
-                            "/role",
+                            "/any-role-test",
                             "/login/oauth2/**",
                             "/error",
                             "/favicon.ico",
@@ -137,8 +119,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                     .antMatchers("/auth/**", "/oauth2/**")
                     .permitAll()
-                    .antMatchers("/test")
-//                    .hasRole(User.Role.USER.name()) //role이 지정되지 않은 사용자일때 된다...?
+                    .antMatchers("/required-authorization-test")
                     .hasAnyRole(User.Role.USER.name(), User.Role.ADMIN.name())
                     .anyRequest()
                     .authenticated()
@@ -149,12 +130,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
                 .and()
                     .redirectionEndpoint()
-                    .baseUri("/login/oauth2/code/*")
+                    .baseUri("/login/oauth2/code/*") //인증 완료, 사용자 코드 포함 => access token에 대한 authorization code 교환 => customoauth2userservice 호출
                 .and()
                     .userInfoEndpoint()
-                    .userService(customOAuth2UserService) /** */
+                    .userService(customOAuth2UserService) //인증된 사용자의 세부사항 작성
                 .and()
-                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                    .successHandler(oAuth2AuthenticationSuccessHandler) //access token 생성 => 이후 uri 접근이 왔을 떄 refresh token을 주면 되는건가?
                     .failureHandler(oAuth2AuthenticationFailureHandler);
 
         // Add our custom Token based authentication filter
