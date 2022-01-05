@@ -2,6 +2,7 @@ package com.example.gachonhub.config;
 
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.security.AppProperties;
+import com.example.gachonhub.security.OAuth2LogOutHandler;
 import com.example.gachonhub.security.RestAuthenticationEntryPoint;
 import com.example.gachonhub.security.TokenAuthenticationFilter;
 import com.example.gachonhub.security.oauth.*;
@@ -20,6 +21,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
 import javax.sql.DataSource;
 
@@ -53,6 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //not match : 요청 거부
     //따라서 인증 값을 리턴 받은 수에도 상태 파라미터를 가지고 있어야 한다. -> redirect_uri과 같은 것에 short-lived cookie로 저장
 
+    private final OAuth2LogOutHandler oAuth2LogOutHandler;
+
 
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
@@ -68,7 +73,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         log.debug("security config -> configure1");
         authenticationManagerBuilder.jdbcAuthentication().dataSource(dataSource);
-
     }
 
     @Bean
@@ -90,53 +94,58 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors()
                 .and()
-                    .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .csrf()
-                    .disable()
-                    .formLogin()
-                    .disable()
-                    .httpBasic()
-                    .disable()
-                    .exceptionHandling()
-                    .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .csrf()
+                .disable()
+                .formLogin()
+                .disable()
+                .httpBasic()
+                .disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .and()
-                    .authorizeRequests()
-                    .antMatchers("/",
-                            "/login",
-                            "/any-role-test",
-                            "/login/oauth2/**",
-                            "/error",
-                            "/favicon.ico",
-                            "/**/*.png",
-                            "/**/*.gif",
-                            "/**/*.svg",
-                            "/**/*.jpg",    //여기에 요청 api 포함해두면 프론트에 따로 뭔가를 넘길 필요없이 프론트가 요청하면 이동하도록 하기
-                            "/**/*.html",
-                            "/**/*.css",
-                            "/**/*.js")
-                    .permitAll()
-                    .antMatchers("/auth/**", "/oauth2/**")
-                    .permitAll()
-                    .antMatchers("/required-authorization-test")
-                    .hasAnyRole(User.Role.USER.name(), User.Role.ADMIN.name())
-                    .anyRequest()
-                    .authenticated()
+                .authorizeRequests()
+                .antMatchers("/",
+                        "/login",
+                        "/any-role-test",
+                        "/login/oauth2/**",
+                        "/error",
+                        "/favicon.ico",
+                        "/**/*.png",
+                        "/**/*.gif",
+                        "/**/*.svg",
+                        "/**/*.jpg",    //여기에 요청 api 포함해두면 프론트에 따로 뭔가를 넘길 필요없이 프론트가 요청하면 이동하도록 하기
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js")
+                .permitAll()
+                .antMatchers("/auth/**", "/oauth2/**")
+                .permitAll()
+                .antMatchers("/required-authorization-test")
+                .hasAnyRole(User.Role.USER.name(), User.Role.ADMIN.name())
+                .anyRequest()
+                .authenticated()
                 .and()
-                    .oauth2Login()
-                    .authorizationEndpoint()
-                    .baseUri("/oauth2/authorize")
-                    .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
+                .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorize")
+                .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
                 .and()
-                    .redirectionEndpoint()
-                    .baseUri("/login/oauth2/code/*") //인증 완료, 사용자 코드 포함 => access token에 대한 authorization code 교환 => customoauth2userservice 호출
+                .redirectionEndpoint()
+                .baseUri("/login/oauth2/code/*") //인증 완료, 사용자 코드 포함 => access token에 대한 authorization code 교환 => customoauth2userservice 호출
                 .and()
-                    .userInfoEndpoint()
-                    .userService(customOAuth2UserService) //인증된 사용자의 세부사항 작성
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService) //인증된 사용자의 세부사항 작성
                 .and()
-                    .successHandler(oAuth2AuthenticationSuccessHandler) //access token 생성 => 이후 uri 접근이 왔을 떄 refresh token을 주면 되는건가?
-                    .failureHandler(oAuth2AuthenticationFailureHandler);
+                .successHandler(oAuth2AuthenticationSuccessHandler) //access token 생성 => 이후 uri 접근이 왔을 떄 refresh token을 주면 되는건가?
+                .failureHandler(oAuth2AuthenticationFailureHandler)
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .addLogoutHandler(oAuth2LogOutHandler)
+                .logoutSuccessHandler(new SimpleUrlLogoutSuccessHandler());
 
         // Add our custom Token based authentication filter
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

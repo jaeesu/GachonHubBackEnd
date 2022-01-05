@@ -6,6 +6,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -21,6 +23,12 @@ public class RedisCustomTemplate {
     public String setRedisStringValue(String key, String value) {
         ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
         stringValueOperations.set(key, value);
+        return stringValueOperations.get(key);
+    }
+
+    public String setRedisTokenFullValue(String key, String value, long timeout, TimeUnit unit) {
+        ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
+        stringValueOperations.set(key, value, timeout, unit);
         return stringValueOperations.get(key);
     }
 }

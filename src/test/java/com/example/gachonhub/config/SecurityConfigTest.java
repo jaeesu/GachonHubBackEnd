@@ -36,7 +36,7 @@ class SecurityConfigTest {
     @Test
     @DisplayName("인증되지 않은 클라이언트가 api 요청 => 401 error")
     void unAuthorizedClient() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/required-authenticated-test"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/required-authorization-test"))
                 .andExpect(status().is4xxClientError());
     }
 
