@@ -6,7 +6,7 @@ import com.example.gachonhub.util.Utils;
 import java.util.Map;
 
 public class OAuth2UserInfoFactory {
-    public static OAuth2UserInfo getOAuth2UserInfo(String registrationId, Map<String, Object> attributes) throws OAuth2AuthenticationProcessingException {
+    public static GithubOAuth2UserInfo getOAuth2UserInfo(String registrationId, Map<String, Object> attributes) throws OAuth2AuthenticationProcessingException {
         if (registrationId.equalsIgnoreCase(Utils.AuthProvider)) {
             return new GithubOAuth2UserInfo(attributes);
         } else {

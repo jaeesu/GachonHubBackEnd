@@ -25,10 +25,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     //사용자를 이름으로 불러와서 userprincipal user로 생성
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
         log.debug("custom user service => loaduserByUserName");
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new UsernameNotFoundException("User not found with email : " + email)
+        User user = userRepository.findByNickname(name).orElseThrow(
+                () -> new UsernameNotFoundException("User not found with name : " + name)
         );
 
         return UserPrincipal.create(user);

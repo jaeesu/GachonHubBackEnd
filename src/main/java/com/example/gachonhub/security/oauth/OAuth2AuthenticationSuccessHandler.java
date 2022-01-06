@@ -1,9 +1,13 @@
 package com.example.gachonhub.security.oauth;
 
+import com.example.gachonhub.redisTemplate.RedisCustomTemplate;
 import com.example.gachonhub.exception.BadRequestException;
 import com.example.gachonhub.security.AppProperties;
 import com.example.gachonhub.security.CookieUtils;
 import com.example.gachonhub.security.TokenProvider;
+import com.example.gachonhub.security.UserPrincipal;
+import com.example.gachonhub.util.Utils;
+import com.example.gachonhub.util.Utils.TokenType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -17,7 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.security.Principal;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.gachonhub.security.oauth.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
@@ -32,8 +38,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
+    private final RedisCustomTemplate redisCustomTemplate;
+
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         String targetUrl = determineTargetUrl(request, response, authentication);
 
         if (response.isCommitted()) {
@@ -55,10 +63,21 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
-        String token = tokenProvider.createToken(authentication);
+        /** access token + refresh token 생성 및 전송 */
+        //access token 생성
+        String accessToken = tokenProvider.createJwtToken(authentication, TokenType.X_AUTH_TOKEN);
+
+        //refresh token 생성 & redis 저장
+        String refreshToken = tokenProvider.createJwtToken(authentication, TokenType.REFRESH_TOKEN);
+        redisCustomTemplate.setRedisTokenFullValue(
+                String.valueOf(((UserPrincipal) authentication.getPrincipal()).getId()),
+                refreshToken, 999999999999L, TimeUnit.MICROSECONDS); //시간 후 자동 삭제
+        log.debug("token redis 저장 : 만료시간 저장");
+        //token 정보 다시 저장
 
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("token", token)
+                .queryParam(TokenType.X_AUTH_TOKEN.getValue(), accessToken)
+                .queryParam(TokenType.REFRESH_TOKEN.getValue(), refreshToken)
                 .build().toUriString();
     }
 
@@ -70,15 +89,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private boolean isAuthorizedRedirectUri(String uri) {
         log.info("success => isAuthorizedRedirectUri");
         URI clientRedirectUri = URI.create(uri);
-
-        //*****************************************
-
-        log.info("client : " + clientRedirectUri.getHost());
-//        log.info("authorization : " + appProperties.getOauth2().getAuthorizedRedirectUris());
-        log.info("authorization : " + appProperties.getAuth().getAuthorizedRedirectUri());
-
-
-//        return appProperties.getOauth2().getAuthorizedRedirectUris()
 
         URI authorizedURI = URI.create(appProperties.getAuth().getAuthorizedRedirectUri());
         if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
