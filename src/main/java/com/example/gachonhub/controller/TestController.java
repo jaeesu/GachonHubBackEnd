@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TestController {
 
-    public final TokenProvider tokenProvider;
+    @GetMapping("/any-role-test")
+    public String anyRole() {
+        return "any role test success";
+    }
 
-    @GetMapping("/test")
-    public String test() {
-        return "success";
+    @GetMapping("/required-authorization-test")
+    public String requiredAutuorization() {
+        return "required authenticated test success";
     }
 }

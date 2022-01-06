@@ -24,7 +24,9 @@ dependencies {
     //querydsl
 //    implementation 'com.querydsl:querydsl-jpa'
     //swagger
-    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+//    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     //mapstruct & lombok
     implementation 'org.mapstruct:mapstruct:1.4.2.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
@@ -46,6 +48,10 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // https://mvnrepository.com/artifact/org.webjars/js-cookie
     implementation 'org.webjars:js-cookie:2.2.1'
