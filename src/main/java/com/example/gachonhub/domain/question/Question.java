@@ -32,14 +32,16 @@ public class Question {
 
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private SecondaryCategory category;
+//    @ManyToOne
+//    @JoinColumn(name = "category_id")
+//    private SecondaryCategory category;
+
+    private String category;
 
     @Column(name = "write_at")
     private Timestamp writeAt;
 
-    private Integer hit;
+    private Long hit;
 
     @OneToMany(cascade = CascadeType.PERSIST)
     List<File> fileList = new ArrayList<>();
