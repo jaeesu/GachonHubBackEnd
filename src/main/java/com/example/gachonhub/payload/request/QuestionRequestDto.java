@@ -1,4 +1,4 @@
-package com.example.gachonhub.payload;
+package com.example.gachonhub.payload.request;
 
 import com.example.gachonhub.domain.category.SecondaryCategory;
 import com.example.gachonhub.domain.file.File;
@@ -8,20 +8,22 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 @Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class QuestionRequest {
+public class QuestionRequestDto {
+
+    //제목, 카테고리, 내용, 첨부파일(다중 파일)
 
     @NotNull
     private String title;
 
 //    @NotNull
-    private SecondaryCategory category;
+//    private SecondaryCategory category;
+    private String category;
 
     @NotNull
     private String content;

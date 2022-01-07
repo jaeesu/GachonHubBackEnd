@@ -4,7 +4,7 @@ import com.example.gachonhub.domain.file.File;
 import com.example.gachonhub.domain.question.Question;
 import com.example.gachonhub.domain.question.QuestionRepository;
 import com.example.gachonhub.domain.user.User;
-import com.example.gachonhub.payload.QuestionRequest;
+import com.example.gachonhub.payload.request.QuestionRequestDto;
 import com.example.gachonhub.util.ImageFileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -24,9 +24,9 @@ public class QuestionService {
     private final ImageFileUtil imageFileUtil;
 
     @Transactional
-    public Long saveQuestionPost(User user, QuestionRequest questionRequest) throws IOException {
-        List<File> files = fileService.convertBytestToFile(imageFileUtil.convertImageToByte(questionRequest.getFiles()));
-        Question question = questionRequest.toEntity(user, files);
+    public Long saveQuestionPost(User user, QuestionRequestDto questionRequestDto) throws IOException {
+        List<File> files = fileService.convertBytestToFile(imageFileUtil.convertImageToByte(questionRequestDto.getFiles()));
+        Question question = questionRequestDto.toEntity(user, files);
         files.stream().forEach(m -> m.setQuestionId(question));
         return questionRepository.save(question).getId();
     }
