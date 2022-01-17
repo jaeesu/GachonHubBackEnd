@@ -4,6 +4,9 @@ import com.example.gachonhub.domain.comment.Comment;
 import com.example.gachonhub.domain.file.File;
 import com.example.gachonhub.domain.likes.Likes;
 import com.example.gachonhub.domain.question.Question;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDate;
@@ -13,6 +16,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class QuestionResponseDto {
 
     private Long id;
@@ -23,8 +28,8 @@ public class QuestionResponseDto {
     private LocalDate writeAt;
     private Long hit;
 
-    private List<File> fileList = new ArrayList<>();
-    private List<CommentResponseDto> commentList = new ArrayList<>();
+    private List<FileResponseDto> fileList;
+    private List<CommentResponseDto> commentList;
 
     public QuestionResponseDto(Question question) {
         this.id = question.getId();
@@ -34,12 +39,29 @@ public class QuestionResponseDto {
         this.category = question.getCategory();
         this.writeAt = question.getWriteAt().toLocalDateTime().toLocalDate();
         this.hit = question.getHit();
-        this.fileList = question.getFileList();
+        this.fileList = question.getFileList().stream()
+                .map(FileResponseDto::new).collect(Collectors.toList());
         this.commentList = question.getCommentList().stream()
                 .map(CommentResponseDto::new).collect(Collectors.toList());
     }
 
-    class CommentResponseDto {
+    @Getter
+    @Setter
+    public static class FileResponseDto {
+        private Long id;
+        private Long questionId;
+        private byte[] image;
+
+        public FileResponseDto(File file) {
+            this.id = file.getId();
+            this.questionId = file.getQuestionId().getId();
+            this.image = file.getImage();
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class CommentResponseDto {
 
         //댓글(댓글 작성자, 시각, 내용, 좋아요 수), 댓글 수
 
@@ -66,7 +88,9 @@ public class QuestionResponseDto {
         }
     }
 
-    class LikesResponseDto {
+    @Getter
+    @Setter
+    public static class LikesResponseDto {
 
         private Long id;
         private String userId;
@@ -80,7 +104,10 @@ public class QuestionResponseDto {
         }
 
         public LikesResponseDto(Likes likes) {
-            BeanUtils.copyProperties(likes, this);
+            this.id = likes.getId();
+            this.userId = likes.getUser().getNickname();
+            this.commentId = likes.getComment().getId();
+            this.questionId = likes.getQuestion().getId();
         }
     }
 

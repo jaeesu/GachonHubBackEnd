@@ -1,58 +1,67 @@
 package com.example.gachonhub.controller;
 
-import com.example.gachonhub.domain.question.QuestionRepository;
+import com.example.gachonhub.domain.question.Question;
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.domain.user.UserRepository;
+import com.example.gachonhub.payload.ValidationGroups.generalGroup;
+import com.example.gachonhub.payload.ValidationGroups.saveGroup;
+import com.example.gachonhub.payload.ValidationGroups.updateGroup;
 import com.example.gachonhub.payload.request.QuestionRequestDto;
+import com.example.gachonhub.payload.response.QuestionListResponseDto;
+import com.example.gachonhub.payload.response.QuestionResponseDto;
 import com.example.gachonhub.payload.response.ResponseUtil;
 import com.example.gachonhub.security.CurrentUser;
 import com.example.gachonhub.security.UserPrincipal;
 import com.example.gachonhub.service.QuestionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/posts/question")
 @RequiredArgsConstructor
 public class QuestionController {
 
-    private final QuestionRepository questionRepository;
     private final QuestionService questionService;
     private final UserRepository userRepository;
 
     @GetMapping()
-    public void findAllQuestionPosts(@RequestParam("page") int page) {
-        questionService.findAllQuestionPostsByPage(page);
-
+    public ResponseEntity<?> findAllQuestionPosts(@RequestParam("page") int page) {
+        QuestionListResponseDto allQuestionPostsByPage = questionService.findAllQuestionPostsByPage(page);
+        return ResponseUtil.success(allQuestionPostsByPage);
     }
 
     @GetMapping("/{postId}")
-    public void findQuestionPost(@PathVariable("postId") Long id) {
-        questionService.findQUestionById(id);
+    public ResponseEntity<?> findQuestionPost(@PathVariable("postId") Long id) {
+        QuestionResponseDto questionPost = questionService.findQuestionPost(id);
+        return ResponseUtil.success(questionPost);
+
     }
 
     @PostMapping
-    public ResponseEntity<?> saveQuestionPost(@CurrentUser UserPrincipal userPrincipal, @ModelAttribute @Valid QuestionRequestDto questionRequestDto) throws IOException {
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new NoSuchElementException());
+    public ResponseEntity<?> saveQuestionPost(@CurrentUser UserPrincipal userPrincipal,
+                                              @ModelAttribute @Validated({generalGroup.class, saveGroup.class}) QuestionRequestDto questionRequestDto) throws IOException {
+
+        //getid 가 null인 경우 에러
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new NoSuchElementException("사용자 인증이 필요합니다."));
         questionService.saveQuestionPost(user, questionRequestDto);
-        return ResponseUtil.success(questionRequestDto);
+        return ResponseUtil.success("게시글 작성 완료");
         //Non-static method 'success(T)' cannot be referenced from a static context
     }
 
-    @PutMapping("/{postId}")
-    public void updateQuestionPost(@CurrentUser UserPrincipal userPrincipal,
-                                   @ModelAttribute @Valid QuestionRequestDto questionRequestDto, @PathVariable("postId") Long id) {
-
+    @PutMapping
+    public ResponseEntity<?> updateQuestionPost(@CurrentUser UserPrincipal userPrincipal,
+                                                @ModelAttribute @Validated({updateGroup.class, generalGroup.class}) QuestionRequestDto questionRequestDto) throws IOException, IllegalAccessException {
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new NoSuchElementException("사용자 인증이 필요합니다."));
+        questionService.updateQuestionPost(user, questionRequestDto);
+        return ResponseUtil.success("게시글 수정 완료");
     }
 
-    @DeleteMapping("/{postId}")
-    public void deleteQuestionPost(@CurrentUser UserPrincipal userPrincipal, @PathVariable("postId") Long id) {
-        questionRepository.deleteById(id);
-
-    }
 }
