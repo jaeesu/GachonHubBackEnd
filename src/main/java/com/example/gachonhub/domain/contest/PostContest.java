@@ -28,9 +28,9 @@ public class PostContest {
 
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "category")
-    private SecondaryCategory category;
+//    @ManyToOne
+//    @JoinColumn(name = "category")
+    private String category;
 
     private Integer people;
 
