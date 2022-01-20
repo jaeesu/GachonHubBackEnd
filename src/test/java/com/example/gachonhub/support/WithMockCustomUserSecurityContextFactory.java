@@ -19,7 +19,7 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
         grantedAuthorities.add(new SimpleGrantedAuthority("USER"));
-        UserPrincipal user = new UserPrincipal(123L, annotation.email(), "1234", grantedAuthorities);
+        UserPrincipal user = new UserPrincipal(123L, "test", grantedAuthorities);
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 user, user.getPassword(), user.getAuthorities()

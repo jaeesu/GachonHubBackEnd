@@ -17,6 +17,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,9 +32,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ActiveProfiles("local")
 @WebMvcTest(controllers = QuestionController.class,
         excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)})
-class QuestionControllerTest {
+@DisplayName("질문글 api 테스트")
+class PostQuestionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -47,7 +50,6 @@ class QuestionControllerTest {
     @Nested
     @DisplayName("질문글 작성 테스트")
     class creation {
-        
         @Test
         @DisplayName("성공")
 //        @WithMockUser(roles = "USER")
@@ -63,7 +65,7 @@ class QuestionControllerTest {
             fileList.add(file);
             fileList.add(file2);
 
-            User user = User.builder().id(1234L).nickname("test").name("test").user_name("test").role(User.Role.USER).build();
+            User user = User.builder().id(1234L).nickname("test").name("test").role(User.Role.USER).build();
 
             given(userRepository.findById(any())).willReturn(Optional.ofNullable(user));
             given(questionService.saveQuestionPost(any(), any())).willReturn(1L);
@@ -73,7 +75,7 @@ class QuestionControllerTest {
                             .file(file)
                             .file(file2)
                             .param("title", "test title")
-                            .param("category", "TEST")
+                            .param("category", "2")
                             .param("content", "test contest")
                             .with(SecurityMockMvcRequestPostProcessors.csrf())
                     //csrf가 없을 때 테스트 실패 => 단 spring boot test, autoconfiguremvctest? 애노테이션을 달았을 때 성고
@@ -89,7 +91,7 @@ class QuestionControllerTest {
             //기존에 withmockuser, withmockcustomuser 둘다 성공하는 것을 확인했는데 갑자기 withmockuser가 안돌아간다.
             //withmockuser를 달지 않았을 때 github 인증 서버로의 리다이렉트 실패로 302에러가 발생한다.
         void questionTest2() throws Exception {
-            User user = User.builder().id(1234L).nickname("test").name("test").user_name("test").role(User.Role.USER).build();
+            User user = User.builder().id(1234L).nickname("test").name("test").role(User.Role.USER).build();
 
             given(userRepository.findById(any())).willReturn(Optional.ofNullable(user));
             given(questionService.saveQuestionPost(any(), any())).willReturn(1L);
@@ -97,7 +99,7 @@ class QuestionControllerTest {
             mockMvc.perform(
                     multipart("/api/posts/question")
                             .param("title", "test title")
-                            .param("category", "TEST")
+                            .param("category", "2")
                             .param("content", "test contest")
                             .with(SecurityMockMvcRequestPostProcessors.csrf())
             ).andExpect(status().isOk());
@@ -111,7 +113,7 @@ class QuestionControllerTest {
 
             mockMvc.perform(
                             multipart("/api/posts/question")
-                                    .param("category", "TEST")
+                                    .param("category", "2")
                                     .param("content", "test contest")
                                     .with(SecurityMockMvcRequestPostProcessors.csrf())
                     )
@@ -144,7 +146,7 @@ class QuestionControllerTest {
             mockMvc.perform(
                             multipart("/api/posts/question")
                                     .param("title", "test title")
-                                    .param("category", "TEST")
+                                    .param("category", "2")
                                     .with(SecurityMockMvcRequestPostProcessors.csrf())
                     )
                     .andExpect(status().isBadRequest())
@@ -152,6 +154,24 @@ class QuestionControllerTest {
                     .andExpect(jsonPath("$.message").value("내용이 누락되었습니다."));
         }
     }
+
+//    @Nested
+//    @DisplayName("질문글 수정 테스트")
+//    class list {
+//
+//        @Test
+//        @DisplayName("성공")
+//        @WithMockCustomUser
+//        void questionTest6(){
+//            // /api/posts/question put
+//            //given
+//
+//
+//            //when
+//
+//            //then
+//        }
+//    }
 
 
 }
