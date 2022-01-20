@@ -8,28 +8,25 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Builder
+@Table(name = "user_repository")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserRepos {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_repos_id")
+    @Column(name = "user_repository_id")
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "repos_url")
     private String url;
 
-    @Column(name = "repos_title")
     private String title;
 
-    @Column(name = "repos_description")
     private String description;
 
-    @Column(name = "repos_lang")
     private String lang;
 }

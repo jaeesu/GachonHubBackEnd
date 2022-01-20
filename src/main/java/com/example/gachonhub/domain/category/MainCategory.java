@@ -1,4 +1,4 @@
-package com.example.gachonhub.domain.chatRoom;
+package com.example.gachonhub.domain.category;
 
 import lombok.*;
 
@@ -9,12 +9,12 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatRoom {
-    //chatroom join 과 chat message 사이의 관계 테이블
+public class MainCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chat_room_id")
+    @Column(name = "main_category_id")
     private Long id;
 
+    private String name;
 }

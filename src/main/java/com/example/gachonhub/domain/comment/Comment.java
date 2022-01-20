@@ -1,7 +1,7 @@
 package com.example.gachonhub.domain.comment;
 
 import com.example.gachonhub.domain.likes.Likes;
-import com.example.gachonhub.domain.question.Question;
+import com.example.gachonhub.domain.question.PostQuestion;
 import com.example.gachonhub.domain.user.User;
 import lombok.*;
 
@@ -27,8 +27,8 @@ public class Comment {
     private User userId;
 
     @ManyToOne
-    @JoinColumn(name = "question_id")
-    private Question questionId;
+    @JoinColumn(name = "post_question_id")
+    private PostQuestion postQuestionId;
 
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")

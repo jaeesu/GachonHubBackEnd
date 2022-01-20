@@ -1,7 +1,9 @@
 package com.example.gachonhub.service;
 
-import com.example.gachonhub.domain.file.File;
-import com.example.gachonhub.domain.question.Question;
+import com.example.gachonhub.domain.category.SubCategory;
+import com.example.gachonhub.domain.category.SubCategoryRepository;
+import com.example.gachonhub.domain.file.UserFile;
+import com.example.gachonhub.domain.question.PostQuestion;
 import com.example.gachonhub.domain.question.QuestionRepository;
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.payload.request.QuestionRequestDto;
@@ -12,15 +14,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -29,59 +27,62 @@ import java.util.stream.Collectors;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
-    private final ImageFileUtil imageFileUtil;
+    private final SubCategoryRepository subCategoryRepository;
+    private ImageFileUtil imageFileUtil = new ImageFileUtil();
 
     @Transactional
     public Long saveQuestionPost(User user, QuestionRequestDto questionRequestDto) throws IOException {
 
-        List<File> files = new ArrayList<>();
+        List<UserFile> userFiles = new ArrayList<>();
 
         if (questionRequestDto.getFiles() != null) {
             List<byte[]> bytes = imageFileUtil.convertImageToByte(questionRequestDto.getFiles());
-             files = bytes.stream().map(m -> File.builder().image(m).build())
+             userFiles = bytes.stream().map(m -> UserFile.builder().image(m).build())
                     .collect(Collectors.toList());
         }//영속성 전이를 할 수 있으면서 중복을 줄일 수 있는 방법으로 코드 수정
 
-        Question question = questionRequestDto.toEntity(user, files);
-        files.forEach(m -> m.setQuestionId(question));
+        SubCategory subCategory = subCategoryRepository.findById(questionRequestDto.getCategory())
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 세부 카테고리입니다."));
+        PostQuestion postQuestion = questionRequestDto.toEntity(user, subCategory, userFiles);
+        userFiles.forEach(m -> m.updateQuestion(postQuestion));
 
         //strema.foreach -> foreach
-        return questionRepository.save(question).getId();
+        return questionRepository.save(postQuestion).getId();
     }
 
     public QuestionListResponseDto findAllQuestionPostsByPage(int page) {
-//        PageRequest request = PageRequest.of(page, 15, Sort.Direction.DESC);
         PageRequest request = PageRequest.of(page, 15);
-        Page<Question> all = questionRepository.findAll(request);
+        Page<PostQuestion> all = questionRepository.findAll(request);
         QuestionListResponseDto questionListResponseDto = new QuestionListResponseDto(all);
         return questionListResponseDto;
     }
 
     public QuestionResponseDto findQuestionPost(Long id) {
-        Question question = findQuestionPostById(id);
-        return new QuestionResponseDto(question);
+        PostQuestion postQuestion = findQuestionPostById(id);
+        return new QuestionResponseDto(postQuestion);
     }
 
     public Long updateQuestionPost(User user, QuestionRequestDto questionRequestDto) throws IllegalAccessException, IOException {
-        Question question = findQuestionPostById(questionRequestDto.getId());
-        isCorrectAuthor(user.getId(), question.getUserId().getId());
+        PostQuestion postQuestion = findQuestionPostById(questionRequestDto.getId());
+        isCorrectAuthor(user.getId(), postQuestion.getUserId().getId());
 
-        List<File> files = new ArrayList<>();
+        List<UserFile> userFiles = new ArrayList<>();
 
         if (questionRequestDto.getFiles() != null) {
             List<byte[]> bytes = imageFileUtil.convertImageToByte(questionRequestDto.getFiles());
-            files = bytes.stream().map(m -> File.builder().image(m).build())
+            userFiles = bytes.stream().map(m -> UserFile.builder().image(m).build())
                     .collect(Collectors.toList());
         }
 
-        Question question1 = questionRequestDto.toEntity(user, files);
-        files.forEach(m -> m.setQuestionId(question1));
+//        Question question = questionRequestDto.update(user, files);
+//        question.removeFiles();
 
-        return questionRepository.save(question1).getId();
+        userFiles.forEach(m -> m.updateQuestion(postQuestion));
 
+        return questionRepository.save(postQuestion).getId();
     }
 
-    public Question findQuestionPostById(Long id) {
+    public PostQuestion findQuestionPostById(Long id) {
         return questionRepository.findById(id).orElseThrow(
                 () -> new NoSuchElementException("해당 번호의 글이 존재하지 않습니다.")
         );

@@ -9,13 +9,14 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Builder
+@Table(name = "post_notice")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostNotice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
+    @Column(name = "post_notice_id")
     private Long id;
 
     @ManyToOne

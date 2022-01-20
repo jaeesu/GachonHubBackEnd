@@ -15,15 +15,13 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     //userprincipal : security에서 지원하는 인증된 사용자의 안전한 정보??
     //oauth2user, userdetilas 등 다 알아보기
     private Long id;
-    private String email;
-    private String password;
+    private String userName;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public UserPrincipal(Long id, String email,String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String nickName, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
-        this.email = email;
-        this.password = password;
+        this.userName = nickName;
         this.authorities = authorities;
     }
 
@@ -35,9 +33,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
         return new UserPrincipal(
                 user.getId(),
-//                user.getEmail(),
-                "test@email.com",
-                user.getPassword(),
+                user.getNickname(),
                 authorities
         );
     }
@@ -53,19 +49,9 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         return id;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-
     @Override
     public String getUsername() {
-        return email;
+        return userName;
     }
 
     @Override
@@ -105,5 +91,10 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     @Override
     public String getName() {
         return String.valueOf(id);
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
     }
 }

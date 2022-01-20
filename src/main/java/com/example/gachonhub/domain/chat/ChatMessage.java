@@ -12,16 +12,16 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Chat {
+public class ChatMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chat_id")
+    @Column(name = "chat_message_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "sender")
-    private User sender;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "chat_room_id")
@@ -29,7 +29,7 @@ public class Chat {
 
     private String content;
 
-    private Timestamp send_at;
+    private Timestamp sendAt;
 
-    private boolean is_read;
+//    private boolean is_read;
 }

@@ -1,11 +1,10 @@
 package com.example.gachonhub.payload.response;
 
-import com.example.gachonhub.domain.question.Question;
+import com.example.gachonhub.domain.question.PostQuestion;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,7 +15,7 @@ public class QuestionListResponseDto {
     private int page;
     private List<ListQuestionDto> data;
 
-    public QuestionListResponseDto(Page<Question> questions) {
+    public QuestionListResponseDto(Page<PostQuestion> questions) {
         this.totalPages = questions.getTotalPages();
         this.page = questions.getNumber();
         this.data = questions.getContent().stream()
@@ -33,14 +32,14 @@ public class QuestionListResponseDto {
         private Long likes;
         private Timestamp writeAt;
 
-        public ListQuestionDto(Question question) {
-            this.id = question.getId();
-            this.title = question.getTitle();
-            this.user = question.getUserId().getNickname();
-            this.category = question.getCategory();
-            this.hit = question.getHit();
-            this.likes = (long) question.getLikesList().size();
-            this.writeAt = question.getWriteAt();
+        public ListQuestionDto(PostQuestion postQuestion) {
+            this.id = postQuestion.getId();
+            this.title = postQuestion.getTitle();
+            this.user = postQuestion.getUserId().getNickname();
+            this.category = postQuestion.getCategoryId().getName();
+            this.hit = postQuestion.getHit();
+            this.likes = (long) postQuestion.getLikesList().size();
+            this.writeAt = postQuestion.getWriteAt();
 
         }
     }

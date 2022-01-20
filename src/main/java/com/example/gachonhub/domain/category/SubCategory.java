@@ -9,13 +9,16 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PrimaryCategory {
+public class SubCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "primary_category_id")
+    @Column(name = "sub_category_id")
     private Long id;
 
-    @Column(name = "category_name")
+    @ManyToOne
+    @JoinColumn(name = "main_category_id")
+    private MainCategory mainCategory;
+
     private String name;
 }
