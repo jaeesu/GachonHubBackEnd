@@ -1,6 +1,6 @@
 package com.example.gachonhub.domain.user.relation;
 
-import com.example.gachonhub.domain.group.Group;
+import com.example.gachonhub.domain.group.Team;
 import com.example.gachonhub.domain.user.User;
 import lombok.*;
 
@@ -9,13 +9,14 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Builder
+@Table(name = "user_team")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserToGroup {
+public class UserToTeam {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_group_id")
+    @Column(name = "user_team_id")
     private Long id;
 
     @ManyToOne
@@ -23,6 +24,6 @@ public class UserToGroup {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
-    private Group group;
+    @JoinColumn(name = "team_id")
+    private Team team;
 }

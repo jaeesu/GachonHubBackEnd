@@ -1,45 +1,65 @@
 package com.example.gachonhub.payload.response;
 
+import com.example.gachonhub.domain.category.SubCategory;
 import com.example.gachonhub.domain.comment.Comment;
-import com.example.gachonhub.domain.file.File;
+import com.example.gachonhub.domain.file.UserFile;
 import com.example.gachonhub.domain.likes.Likes;
-import com.example.gachonhub.domain.question.Question;
-import org.springframework.beans.BeanUtils;
+import com.example.gachonhub.domain.question.PostQuestion;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class QuestionResponseDto {
 
     private Long id;
     private String user;
     private String title;
     private String content;
-    private String category;
+    private SubCategory category;
     private LocalDate writeAt;
     private Long hit;
 
-    private List<File> fileList = new ArrayList<>();
-    private List<CommentResponseDto> commentList = new ArrayList<>();
+    private List<FileResponseDto> fileList;
+    private List<CommentResponseDto> commentList;
 
-    public QuestionResponseDto(Question question) {
-        this.id = question.getId();
-        this.user = question.getUserId().getNickname();
-        this.title = question.getTitle();
-        this.content = question.getContent();
-        this.category = question.getCategory();
-        this.writeAt = question.getWriteAt().toLocalDateTime().toLocalDate();
-        this.hit = question.getHit();
-        this.fileList = question.getFileList();
-        this.commentList = question.getCommentList().stream()
+    public QuestionResponseDto(PostQuestion postQuestion) {
+        this.id = postQuestion.getId();
+        this.user = postQuestion.getUserId().getNickname();
+        this.title = postQuestion.getTitle();
+        this.content = postQuestion.getContent();
+        this.category = postQuestion.getCategoryId();
+        this.writeAt = postQuestion.getWriteAt().toLocalDateTime().toLocalDate();
+        this.hit = postQuestion.getHit();
+        this.fileList = postQuestion.getUserFileList().stream()
+                .map(FileResponseDto::new).collect(Collectors.toList());
+        this.commentList = postQuestion.getCommentList().stream()
                 .map(CommentResponseDto::new).collect(Collectors.toList());
     }
 
-    class CommentResponseDto {
+    @Getter
+    @Setter
+    public static class FileResponseDto {
+        private Long id;
+        private Long questionId;
+        private byte[] image;
+
+        public FileResponseDto(UserFile userFile) {
+            this.id = userFile.getId();
+            this.questionId = userFile.getPostQuestionId().getId();
+            this.image = userFile.getImage();
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class CommentResponseDto {
 
         //댓글(댓글 작성자, 시각, 내용, 좋아요 수), 댓글 수
 
@@ -58,7 +78,7 @@ public class QuestionResponseDto {
         public CommentResponseDto(Comment comment) {
             this.id = comment.getId();
             this.userId = comment.getUserId().getNickname();
-            this.questionId = comment.getQuestionId().getId();
+            this.questionId = comment.getPostQuestionId().getId();
             this.superCommnetId = comment.getParentComment().getId();
             this.writeAt = comment.getWriteAt().toLocalDateTime().toLocalDate();
             this.likesList = comment.getLikesList().stream()
@@ -66,7 +86,9 @@ public class QuestionResponseDto {
         }
     }
 
-    class LikesResponseDto {
+    @Getter
+    @Setter
+    public static class LikesResponseDto {
 
         private Long id;
         private String userId;
@@ -80,7 +102,10 @@ public class QuestionResponseDto {
         }
 
         public LikesResponseDto(Likes likes) {
-            BeanUtils.copyProperties(likes, this);
+            this.id = likes.getId();
+            this.userId = likes.getUser().getNickname();
+            this.commentId = likes.getComment().getId();
+            this.questionId = likes.getPostQuestion().getId();
         }
     }
 

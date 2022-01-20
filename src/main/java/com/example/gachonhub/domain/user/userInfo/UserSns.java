@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Builder
+@Table(name = "user_sns")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserSns {
@@ -21,7 +22,7 @@ public class UserSns {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String sns_category;
+    private String category;
 
-    private String sns_url;
+    private String url;
 }

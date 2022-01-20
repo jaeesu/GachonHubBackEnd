@@ -86,15 +86,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         log.debug("getnickname : {}", oAuth2UserInfo.getNickName() + "     " + appProperties.getGithub().getDeveloperId());
         User user = User.builder()
                 .id(Long.parseLong(oAuth2UserInfo.getId()))
-                .email(oAuth2UserInfo.getEmail())
                 .nickname(oAuth2UserInfo.getNickName())
                 .name(oAuth2UserInfo.getName())
                 .avatar_url(oAuth2UserInfo.getImageUrl())
-                .home_url(oAuth2UserInfo.getHomeUrl())
-                .blog(oAuth2UserInfo.getBlog())
                 .company(oAuth2UserInfo.getCompany())
                 .created_at(oAuth2UserInfo.getCreatedAt())
-                .updated_at(oAuth2UserInfo.getUpdatedAt())
                 .role(role)
                 .build();
         return userRepository.save(user);
