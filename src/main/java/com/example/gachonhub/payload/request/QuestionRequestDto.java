@@ -1,23 +1,22 @@
 package com.example.gachonhub.payload.request;
 
-import com.example.gachonhub.domain.file.File;
-import com.example.gachonhub.domain.question.Question;
+import com.example.gachonhub.domain.category.SubCategory;
+import com.example.gachonhub.domain.file.UserFile;
+import com.example.gachonhub.domain.question.PostQuestion;
 import com.example.gachonhub.domain.user.User;
-import com.example.gachonhub.payload.ValidationGroups;
 import com.example.gachonhub.payload.ValidationGroups.generalGroup;
 import com.example.gachonhub.payload.ValidationGroups.saveGroup;
 import com.example.gachonhub.payload.ValidationGroups.updateGroup;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.List;
+import java.util.Set;
 
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class QuestionRequestDto {
@@ -32,22 +31,21 @@ public class QuestionRequestDto {
     private String title;
 
     @NotNull(groups = generalGroup.class, message = "카테고리가 누락되었습니다.")
-//    private SecondaryCategory category;
-    private String category;
+    private Long category;
 
     @NotNull(groups = generalGroup.class, message = "내용이 누락되었습니다.")
     private String content;
 
     private List<MultipartFile> files;
 
-    public Question toEntity(User user, List<File> fileList) {
-        Question build = Question.builder()
+    public PostQuestion toEntity(User user, SubCategory subCategory, List<UserFile> userFileList) {
+        PostQuestion build = PostQuestion.builder()
                 .id(this.id)
                 .userId(user)
                 .title(this.title)
-                .category(this.category)
+                .categoryId(subCategory)
                 .content(this.content)
-                .fileList(fileList)
+                .userFileList(userFileList)
                 .build();
         return build;
     }

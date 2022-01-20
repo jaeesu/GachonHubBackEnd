@@ -1,6 +1,5 @@
 package com.example.gachonhub.controller;
 
-import com.example.gachonhub.domain.question.Question;
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.domain.user.UserRepository;
 import com.example.gachonhub.payload.ValidationGroups.generalGroup;
@@ -15,7 +14,6 @@ import com.example.gachonhub.security.UserPrincipal;
 import com.example.gachonhub.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -29,10 +27,12 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class QuestionController {
 
+    //질문 게시글을 삭제할 수 없다.
+
     private final QuestionService questionService;
     private final UserRepository userRepository;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> findAllQuestionPosts(@RequestParam("page") int page) {
         QuestionListResponseDto allQuestionPostsByPage = questionService.findAllQuestionPostsByPage(page);
         return ResponseUtil.success(allQuestionPostsByPage);
@@ -42,13 +42,11 @@ public class QuestionController {
     public ResponseEntity<?> findQuestionPost(@PathVariable("postId") Long id) {
         QuestionResponseDto questionPost = questionService.findQuestionPost(id);
         return ResponseUtil.success(questionPost);
-
     }
 
     @PostMapping
     public ResponseEntity<?> saveQuestionPost(@CurrentUser UserPrincipal userPrincipal,
                                               @ModelAttribute @Validated({generalGroup.class, saveGroup.class}) QuestionRequestDto questionRequestDto) throws IOException {
-
         //getid 가 null인 경우 에러
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new NoSuchElementException("사용자 인증이 필요합니다."));
         questionService.saveQuestionPost(user, questionRequestDto);

@@ -22,7 +22,7 @@ public class AdviceController {
         //e.getmessage와의 차이점 확인하기
     }
 
-    @ExceptionHandler(value = {NoSuchElementException.class})
+    @ExceptionHandler(value = {NoSuchElementException.class}) //service단의 핸들링이 안됨
     public ResponseEntity<DefaultResponse<String>> NoSuchElementHandler(Exception e, BindingResult result) {
         return ResponseUtil.fail(HttpStatus.NO_CONTENT, result.getFieldError().getDefaultMessage());
 
