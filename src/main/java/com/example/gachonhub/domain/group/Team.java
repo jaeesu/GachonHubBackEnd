@@ -10,36 +10,37 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user_group")
-public class Group {
+@Table(name = "team")
+public class Team {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_id")
+    @Column(name = "team_id")
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    private String name;
+
     private String repos;
 
+    @Column(name = "team_type")
     @Enumerated(EnumType.STRING)
-    private GroupType type;
+    private TeamType type;
 
     private String description;
 
-    private String name;
+    @Column(name = "commit_count")
+    private Long commitCount;
 
-    private String commitCount;
-
-    @Column(name = "is_recruit")
     private boolean recruiting;
 
-    @Column(name = "recruit_content")
-    private String recruitContent;
+    @Column(name = "recruiting_content")
+    private String recruitingContent;
 
-    public enum GroupType {
+    public enum TeamType {
         STUDY, CREW
     }
 }

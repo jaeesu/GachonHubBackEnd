@@ -17,13 +17,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManager;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,8 +43,6 @@ class QuestionControllerTest {
 
     @MockBean
     private UserRepository userRepository;
-
-
 
     @Nested
     @DisplayName("질문글 작성 테스트")
@@ -114,11 +109,6 @@ class QuestionControllerTest {
         @WithMockUser(roles = "USER")
         void questionTest3() throws Exception {
 
-            User user = User.builder().id(1234L).nickname("test").name("test").user_name("test").role(User.Role.USER).build();
-
-            given(userRepository.findById(any())).willReturn(Optional.ofNullable(user));
-            given(questionService.saveQuestionPost(any(), any())).willReturn(1L);
-
             mockMvc.perform(
                             multipart("/api/posts/question")
                                     .param("category", "TEST")
@@ -135,11 +125,6 @@ class QuestionControllerTest {
         @WithMockUser(roles = "USER")
         void questionTest4() throws Exception {
 
-            User user = User.builder().id(1234L).nickname("test").name("test").user_name("test").role(User.Role.USER).build();
-
-            given(userRepository.findById(any())).willReturn(Optional.ofNullable(user));
-            given(questionService.saveQuestionPost(any(), any())).willReturn(1L);
-
             mockMvc.perform(
                             multipart("/api/posts/question")
                                     .param("title", "test title")
@@ -155,11 +140,6 @@ class QuestionControllerTest {
         @DisplayName("실패 (내용 누락)")
         @WithMockUser(roles = "USER")
         void questionTest5() throws Exception {
-
-            User user = User.builder().id(1234L).nickname("test").name("test").user_name("test").role(User.Role.USER).build();
-
-            given(userRepository.findById(any())).willReturn(Optional.ofNullable(user));
-            given(questionService.saveQuestionPost(any(), any())).willReturn(1L);
 
             mockMvc.perform(
                             multipart("/api/posts/question")

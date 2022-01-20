@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Component
 public class ImageFileUtil {
 
     public List<byte[]> convertImageToByte(List<MultipartFile> fileList) throws IOException {

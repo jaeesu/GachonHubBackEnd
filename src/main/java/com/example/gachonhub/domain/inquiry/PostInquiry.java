@@ -9,13 +9,14 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Builder
+@Table(name = "post_inquiry")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostInquiry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
+    @Column(name = "post_inquiry_id")
     private Long id;
 
     @ManyToOne
@@ -32,9 +33,9 @@ public class PostInquiry {
     @Column(name = "write_at")
     private Timestamp timestamp;
 
-    @Column(name = "post_password")
+    @Column(name = "password")
     private Integer password;
 
-    @Column(name = "is_secret")
+    @Column(name = "secret")
     private boolean secret;
 }
