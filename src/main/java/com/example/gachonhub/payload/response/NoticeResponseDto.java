@@ -7,8 +7,8 @@ import java.time.LocalDate;
 
 @NoArgsConstructor
 @Getter
-@Builder(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@Builder(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class NoticeResponseDto {
 
     private Long id;

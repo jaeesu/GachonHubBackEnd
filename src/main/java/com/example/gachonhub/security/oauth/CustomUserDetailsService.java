@@ -39,7 +39,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserById(Long id) {
         log.debug("custom user service => loaduserByUserId");
         User user = userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", id)
+                () -> new ResourceNotFoundException("해당 아이디의 사용자가 존재하지 않습니다.")
         );
 
         return UserPrincipal.create(user);
