@@ -3,10 +3,11 @@ package com.example.gachonhub.controller;
 import com.example.gachonhub.config.SecurityConfig;
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.domain.user.UserRepository;
+import com.example.gachonhub.exception.ResourceNotFoundException;
 import com.example.gachonhub.payload.request.NoticeRequestDto;
+import com.example.gachonhub.payload.response.NoticeResponseDto;
 import com.example.gachonhub.service.NoticeService;
 import com.example.gachonhub.support.WithMockCustomUser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static com.example.gachonhub.domain.user.User.Role.USER;
@@ -127,6 +129,60 @@ class NoticeControllerTest {
                     .andExpect(jsonPath("$.message").value("내용이 누락되었습니다."));
         }
 
+    }
+
+    //TODO : PERMITALL 필터링 되지 않는 부분 수정 (실제 api 요청 시에는 필터링이 잘 되는데 테스트에서는 되지 않음.)
+    @Nested
+    @DisplayName("공지사항 조회 테스트")
+    @WithMockCustomUser
+    class ReadNoticeTest {
+
+        @Test
+        @DisplayName("특정 글 조회 성공")
+        void readSuccessTest1() throws Exception {
+            //given
+
+            NoticeResponseDto dto = NoticeResponseDto.builder()
+                    .id(1L)
+                    .user("testUser")
+                    .title("title")
+                    .content("content")
+                    .writeAt(LocalDate.now())
+                    .build();
+            given(noticeService.findNoticePost(any())).willReturn(dto);
+
+            //when
+
+            ResultActions perform = mockMvc.perform(
+                    get("/api/posts/notice/1")
+//                            .with(anonymous())
+            );
+
+            //then
+            //mockmvctest에서 permitall이 작동하지 않는다.
+            perform.andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.id").value(dto.getId()))
+                    .andExpect(jsonPath("$.data.user").value(dto.getUser()))
+                    .andExpect(jsonPath("$.data.title").value(dto.getTitle()))
+                    .andExpect(jsonPath("$.data.content").value(dto.getContent()))
+                    .andExpect(jsonPath("$.data.writeAt").value(dto.getWriteAt().toString()));
+
+        }
+
+        @Test
+        @DisplayName("특정 글 조회 실패 (존재하지 않는 글)")
+        void readFailTest1() throws Exception {
+            //given
+            given(noticeService.findNoticePost(any())).willThrow(new ResourceNotFoundException("해당 번호의 글이 존재하지 않습니다."));
+
+            //when
+            ResultActions perform = mockMvc.perform(
+                    get("/api/posts/notice/1")
+            );
+
+            //then
+            perform.andExpect(status().isNotFound());
+        }
     }
 
     @Nested
