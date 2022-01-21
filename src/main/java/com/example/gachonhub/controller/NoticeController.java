@@ -7,6 +7,8 @@ import com.example.gachonhub.payload.ValidationGroups.generalGroup;
 import com.example.gachonhub.payload.ValidationGroups.saveGroup;
 import com.example.gachonhub.payload.ValidationGroups.updateGroup;
 import com.example.gachonhub.payload.request.NoticeRequestDto;
+import com.example.gachonhub.payload.response.NoticeListResponseDto;
+import com.example.gachonhub.payload.response.NoticeResponseDto;
 import com.example.gachonhub.security.CurrentUser;
 import com.example.gachonhub.security.UserPrincipal;
 import com.example.gachonhub.service.NoticeService;
@@ -28,13 +30,15 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @GetMapping
-    public void findAllNoticePosts(@RequestParam("page") int page) {
-        noticeService.findAllNoticePostsByPage(page);
+    public ResponseEntity<?> findAllNoticePosts(@RequestParam("page") int page) {
+        NoticeListResponseDto dto = noticeService.findAllNoticePostsByPage(page);
+        return success(dto);
     }
 
     @GetMapping("/{postId}")
-    public void findNoticePost(@PathVariable("postId") Long id) {
-        noticeService.findNoticePost(id);
+    public ResponseEntity<?> findNoticePost(@PathVariable("postId") Long id) {
+        NoticeResponseDto noticePost = noticeService.findNoticePost(id);
+        return success(noticePost);
     }
 
     @PostMapping

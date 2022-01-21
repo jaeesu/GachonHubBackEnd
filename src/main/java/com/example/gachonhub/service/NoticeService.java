@@ -3,6 +3,7 @@ package com.example.gachonhub.service;
 import com.example.gachonhub.domain.notice.PostNotice;
 import com.example.gachonhub.domain.notice.PostNoticeRepository;
 import com.example.gachonhub.domain.user.User;
+import com.example.gachonhub.exception.ResourceNotFoundException;
 import com.example.gachonhub.payload.request.NoticeRequestDto;
 import com.example.gachonhub.payload.response.NoticeListResponseDto;
 import com.example.gachonhub.payload.response.NoticeResponseDto;
@@ -51,7 +52,7 @@ public class NoticeService {
 
     public PostNotice findNoticePostById(Long id) {
         return noticeRepository.findById(id).orElseThrow(
-                () -> new NoSuchElementException("해당 번호의 글이 존재하지 않습니다.")
+                () -> new ResourceNotFoundException("해당 번호의 글이 존재하지 않습니다.")
         );
     }
 
