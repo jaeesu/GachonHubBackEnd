@@ -26,6 +26,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static com.example.gachonhub.domain.user.User.Role.USER;
+import static com.example.gachonhub.util.ErrorUtil.NOT_FOUND_CONTENT_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -173,7 +174,7 @@ class NoticeControllerTest {
         @DisplayName("특정 글 조회 실패 (존재하지 않는 글)")
         void readFailTest1() throws Exception {
             //given
-            given(noticeService.findNoticePost(any())).willThrow(new ResourceNotFoundException("해당 번호의 글이 존재하지 않습니다."));
+            given(noticeService.findNoticePost(any())).willThrow(new ResourceNotFoundException(NOT_FOUND_CONTENT_ID));
 
             //when
             ResultActions perform = mockMvc.perform(
