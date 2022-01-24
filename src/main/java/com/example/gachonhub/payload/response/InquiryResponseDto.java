@@ -15,7 +15,7 @@ public class InquiryResponseDto {
     private String userId;
     private String title;
     private String content;
-    private String img;
+    private byte[] img;
     private LocalDate writeAt;
     private Integer password;
     private boolean secret;
@@ -26,7 +26,7 @@ public class InquiryResponseDto {
                 .userId(inquiry.getUserId().getNickname())
                 .title(inquiry.getTitle())
                 .content(inquiry.getContent())
-                .img(inquiry.getImgUrl())
+                .img(inquiry.getImg())
                 .writeAt(inquiry.getWriteAt().toLocalDateTime().toLocalDate())
                 .password(inquiry.getPassword())
                 .secret(inquiry.isSecret())

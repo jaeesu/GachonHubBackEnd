@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-@NoArgsConstructor
-@Builder(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@AllArgsConstructor
 public class InquiryListResponseDto {
 
     private int totalPages;
@@ -27,6 +27,7 @@ public class InquiryListResponseDto {
     }
 
     @Getter
+    @AllArgsConstructor
     public static class ListInquiryDto {
         private Long id;
         private String userId;

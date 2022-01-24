@@ -5,12 +5,12 @@ import com.example.gachonhub.domain.comment.Comment;
 import com.example.gachonhub.domain.file.UserFile;
 import com.example.gachonhub.domain.likes.Likes;
 import com.example.gachonhub.domain.question.PostQuestion;
+import com.example.gachonhub.exception.ResourceNotFoundException;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -71,7 +71,7 @@ public class QuestionResponseDto {
         private List<LikesResponseDto> likesList;
 
         public CommentResponseDto toDto(Optional<Comment> comment) {
-            comment.map(CommentResponseDto::new).orElseThrow(() -> new NoSuchElementException());
+            comment.map(CommentResponseDto::new).orElseThrow(() -> new ResourceNotFoundException());
             return this;
         }
 
