@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
+import static com.example.gachonhub.util.ErrorUtil.NOT_FOUND_CONTENT_ID;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +52,7 @@ public class NoticeService {
 
     public PostNotice findNoticePostById(Long id) {
         return noticeRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("해당 번호의 글이 존재하지 않습니다.")
+                () -> new ResourceNotFoundException(NOT_FOUND_CONTENT_ID)
         );
     }
 

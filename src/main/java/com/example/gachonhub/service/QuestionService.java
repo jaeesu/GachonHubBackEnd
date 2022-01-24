@@ -6,6 +6,7 @@ import com.example.gachonhub.domain.file.UserFile;
 import com.example.gachonhub.domain.question.PostQuestion;
 import com.example.gachonhub.domain.question.QuestionRepository;
 import com.example.gachonhub.domain.user.User;
+import com.example.gachonhub.exception.ResourceNotFoundException;
 import com.example.gachonhub.payload.request.QuestionRequestDto;
 import com.example.gachonhub.payload.response.QuestionListResponseDto;
 import com.example.gachonhub.payload.response.QuestionResponseDto;
@@ -20,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.example.gachonhub.util.ErrorUtil.NOT_FOUND_CONTENT_ID;
 
 @Slf4j
 @Service
@@ -42,7 +45,7 @@ public class QuestionService {
         }//영속성 전이를 할 수 있으면서 중복을 줄일 수 있는 방법으로 코드 수정
 
         SubCategory subCategory = subCategoryRepository.findById(questionRequestDto.getCategory())
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 세부 카테고리입니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 세부 카테고리입니다."));
         PostQuestion postQuestion = questionRequestDto.toEntity(user, subCategory, userFiles);
         userFiles.forEach(m -> m.updateQuestion(postQuestion));
 
@@ -84,7 +87,7 @@ public class QuestionService {
 
     public PostQuestion findQuestionPostById(Long id) {
         return questionRepository.findById(id).orElseThrow(
-                () -> new NoSuchElementException("해당 번호의 글이 존재하지 않습니다.")
+                () -> new ResourceNotFoundException(NOT_FOUND_CONTENT_ID)
         );
     }
 

@@ -2,6 +2,7 @@ package com.example.gachonhub.controller;
 
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.domain.user.UserRepository;
+import com.example.gachonhub.exception.ResourceNotFoundException;
 import com.example.gachonhub.payload.ValidationGroups.generalGroup;
 import com.example.gachonhub.payload.ValidationGroups.saveGroup;
 import com.example.gachonhub.payload.ValidationGroups.updateGroup;
@@ -19,7 +20,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.NoSuchElementException;
+
+import static com.example.gachonhub.util.ErrorUtil.NOT_FOUND_USER_ID;
 
 @Slf4j
 @RestController
@@ -48,7 +50,7 @@ public class QuestionController {
     public ResponseEntity<?> saveQuestionPost(@CurrentUser UserPrincipal userPrincipal,
                                               @ModelAttribute @Validated({generalGroup.class, saveGroup.class}) QuestionRequestDto questionRequestDto) throws IOException {
         //getid 가 null인 경우 에러
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new NoSuchElementException("사용자 인증이 필요합니다."));
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
         questionService.saveQuestionPost(user, questionRequestDto);
         return ResponseUtil.success("게시글 작성 완료");
         //Non-static method 'success(T)' cannot be referenced from a static context
@@ -57,7 +59,7 @@ public class QuestionController {
     @PutMapping
     public ResponseEntity<?> updateQuestionPost(@CurrentUser UserPrincipal userPrincipal,
                                                 @ModelAttribute @Validated({updateGroup.class, generalGroup.class}) QuestionRequestDto questionRequestDto) throws IOException, IllegalAccessException {
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new NoSuchElementException("사용자 인증이 필요합니다."));
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
         questionService.updateQuestionPost(user, questionRequestDto);
         return ResponseUtil.success("게시글 수정 완료");
     }
