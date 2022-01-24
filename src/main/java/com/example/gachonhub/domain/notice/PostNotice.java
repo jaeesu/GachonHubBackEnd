@@ -14,6 +14,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostNotice {
 
+    //조회수??
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_notice_id")
@@ -28,5 +30,5 @@ public class PostNotice {
     private String content;
 
     @Column(name = "write_at")
-    private Timestamp timestamp;
+    private Timestamp writeAt;
 }
