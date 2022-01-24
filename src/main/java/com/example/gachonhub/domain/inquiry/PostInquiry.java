@@ -28,7 +28,7 @@ public class PostInquiry {
     private String content;
 
     @Column(name = "img_url")
-    private String imgUrl;
+    private byte[] img;
 
     @Column(name = "write_at")
     private Timestamp writeAt;
