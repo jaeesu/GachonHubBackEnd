@@ -5,6 +5,7 @@ import com.example.gachonhub.domain.category.SubCategory;
 import com.example.gachonhub.domain.file.FileRepository;
 import com.example.gachonhub.domain.file.UserFile;
 import com.example.gachonhub.domain.user.User;
+import com.example.gachonhub.exception.ResourceNotFoundException;
 import com.example.gachonhub.payload.request.QuestionRequestDto;
 import com.google.common.io.ByteStreams;
 import org.junit.jupiter.api.DisplayName;
@@ -45,9 +46,9 @@ class PostQuestionRepositoryTest {
     @DisplayName("존재하지 않는 post id의 조회를 요청 => 에러 발생")
     void notValidPostId() {
         Optional<PostQuestion> byId = questionRepository.findById(1L);
-        assertThrows(NoSuchElementException.class, () -> {
+        assertThrows(ResourceNotFoundException.class, () -> {
                 byId.orElseThrow(
-                        () -> new NoSuchElementException("no such element id is " + 1L));
+                        () -> new ResourceNotFoundException("no such element id is " + 1L));
         });
     }
 
