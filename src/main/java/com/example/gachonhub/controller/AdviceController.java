@@ -6,6 +6,7 @@ import com.example.gachonhub.payload.response.ResponseUtil;
 import com.example.gachonhub.payload.response.ResponseUtil.DefaultResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,7 +22,7 @@ public class AdviceController {
         //e.getmessage와의 차이점 확인하기
     }
 
-    @ExceptionHandler(value = {ResourceNotFoundException.class})
+    @ExceptionHandler(value = {ResourceNotFoundException.class, HttpMessageNotReadableException.class})
     public ResponseEntity<DefaultResponse<String>> ResourceNotFoundHandler(Exception e) {
         return ResponseUtil.fail(HttpStatus.BAD_REQUEST, e.getMessage());
         //e.getmessage와의 차이점 확인하기

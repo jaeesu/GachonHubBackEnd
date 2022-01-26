@@ -94,6 +94,7 @@ public class QuestionResponseDto {
         private String userId;
         private Long commentId;
         private Long questionId;
+        private Long contestId;
 
         public List<LikesResponseDto> toDto(List<Likes> list) {
             return list.stream()
@@ -104,8 +105,9 @@ public class QuestionResponseDto {
         public LikesResponseDto(Likes likes) {
             this.id = likes.getId();
             this.userId = likes.getUser().getNickname();
-            this.commentId = likes.getComment().getId();
+            this.commentId = likes.getParentComment().getId();
             this.questionId = likes.getPostQuestion().getId();
+            this.contestId = likes.getPostContest().getId();
         }
     }
 
