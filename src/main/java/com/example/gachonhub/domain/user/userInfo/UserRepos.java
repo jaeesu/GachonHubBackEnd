@@ -4,6 +4,7 @@ import com.example.gachonhub.domain.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -14,7 +15,6 @@ import javax.persistence.*;
 public class UserRepos {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_repository_id")
     private Long id;
 
@@ -29,4 +29,6 @@ public class UserRepos {
     private String description;
 
     private String lang;
+
+    private LocalDateTime updatedAt;
 }
