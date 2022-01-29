@@ -32,6 +32,7 @@ public class AppProperties {
     public static class Github {
         private String developerId;
         private String developerPassword;
+        private String baseuri;
     }
 
 }
