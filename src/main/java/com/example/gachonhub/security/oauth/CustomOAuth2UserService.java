@@ -35,6 +35,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         log.info("Oauth2 => custom user service : loadUser");
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
+        log.info("github token : " + oAuth2UserRequest.getAccessToken().getTokenValue());
 
         try {
             return processOAuth2User(oAuth2UserRequest, oAuth2User);
@@ -47,8 +48,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) throws OAuth2AuthenticationProcessingException {
-
-//        oauth2userrequest : ClientRegistration clientRegistration, OAuth2AccessToken accessToken, additionalParameters;
 //
         log.debug("Oauth2 => custom user service : processOAuth2User");
 
@@ -92,6 +91,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .company(oAuth2UserInfo.getCompany())
                 .created_at(oAuth2UserInfo.getCreatedAt())
                 .role(role)
+                .githubToken(oAuth2UserRequest.getAccessToken().getTokenValue())
                 .build();
         return userRepository.save(user);
     }

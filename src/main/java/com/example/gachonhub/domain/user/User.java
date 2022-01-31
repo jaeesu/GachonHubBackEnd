@@ -33,12 +33,14 @@ public class User {
 
     private String description;
 
-    private boolean graduate;
+    private Boolean graduate;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
     private String created_at;
+
+    private String githubToken;
 
     public enum Role {
         ADMIN, USER,
