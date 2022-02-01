@@ -26,11 +26,10 @@ import java.util.Set;
 public class PostQuestion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_question_id")
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User userId;
@@ -40,6 +39,7 @@ public class PostQuestion {
     private String content;
 
     @ManyToOne
+    @JoinColumn(name = "category_id")
     private SubCategory categoryId;
 
     @Column(name = "write_at")
@@ -49,7 +49,7 @@ public class PostQuestion {
     @Builder.Default //애노테이션을 넣지 않으면 0이 들어가지 않는다.
     private Long hit = 0L;
 
-    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(cascade = {CascadeType.ALL})
     private List<UserFile> userFileList = new ArrayList<>();
 
     @OneToMany
@@ -57,21 +57,5 @@ public class PostQuestion {
 
     @OneToMany
     private List<Likes> likesList = new ArrayList<>();
-
-    public void fromQuestionRequestWithFile(QuestionRequestDto dto, SubCategory subCategory, List<UserFile> userFileList) {
-//        removeFiles();
-        this.title = dto.getTitle();
-        this.content = dto.getContent();
-        this.categoryId = subCategory;
-        this.userFileList = userFileList;
-    }
-
-    public PostQuestion removeFiles() {
-//        this.fileList.clear(); //=>왜 orphan remove가 안되는지 모르겠다.
-//        this.fileList.stream().forEach(m -> m.updateQuestion(null));
-        this.userFileList.removeAll(this.userFileList);
-        return this;
-    }
-
 
 }

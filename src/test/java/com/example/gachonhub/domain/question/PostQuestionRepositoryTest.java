@@ -2,23 +2,18 @@ package com.example.gachonhub.domain.question;
 
 import com.example.gachonhub.domain.category.MainCategory;
 import com.example.gachonhub.domain.category.SubCategory;
-import com.example.gachonhub.domain.file.FileRepository;
 import com.example.gachonhub.domain.file.UserFile;
+import com.example.gachonhub.domain.file.UserFileRepository;
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.exception.ResourceNotFoundException;
-import com.example.gachonhub.payload.request.QuestionRequestDto;
-import com.google.common.io.ByteStreams;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.EntityManager;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +35,7 @@ class PostQuestionRepositoryTest {
     private QuestionRepository questionRepository;
 
     @Autowired
-    private FileRepository fileRepository;
+    private UserFileRepository userFileRepository;
 
     @Test
     @DisplayName("존재하지 않는 post id의 조회를 요청 => 에러 발생")
@@ -62,7 +57,7 @@ class PostQuestionRepositoryTest {
         questionRepository.save(postQuestion);
 
         assertThat(questionRepository.findAll().size()).isEqualTo(1);
-        assertThat(fileRepository.findAll().size()).isEqualTo(2);
+        assertThat(userFileRepository.findAll().size()).isEqualTo(2);
         List<UserFile> list1 = new ArrayList<>(questionRepository.findAll().get(0).getUserFileList());
         assertThat(list1.get(0).getPostQuestionId()).isNotEqualTo(null);
         assertThat(list1.get(1).getPostQuestionId()).isNotEqualTo(null);
@@ -172,10 +167,18 @@ class PostQuestionRepositoryTest {
     }
 
     List<UserFile> getTestFileList() throws IOException {
-        byte[] bytes = ByteStreams.toByteArray(new FileInputStream((new ClassPathResource("test/testImage.jpeg")).getFile()));
-        byte[] bytes2 = ByteStreams.toByteArray(new FileInputStream((new ClassPathResource("test/testImage2.jpeg")).getFile()));
-        UserFile userFile = UserFile.builder().image(bytes).build();
-        UserFile userFile2 = UserFile.builder().image(bytes2).build();
+
+        String url1 = "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg";
+        String url2 = "https://spring.io/images/spring-initializr-4291cc0115eb104348717b82161a81de.svg";
+
+        UserFile userFile = UserFile.builder()
+                .imageUrl(url1)
+                .realName("test1.svg")
+                .build();
+        UserFile userFile2 = UserFile.builder()
+                .imageUrl(url2)
+                .realName("test2.svg")
+                .build();
 
         List<UserFile> list = new ArrayList<>();
         list.add(userFile);

@@ -3,21 +3,18 @@ package com.example.gachonhub.service;
 import com.example.gachonhub.domain.category.MainCategory;
 import com.example.gachonhub.domain.category.SubCategory;
 import com.example.gachonhub.domain.file.UserFile;
-import com.example.gachonhub.domain.file.FileRepository;
+import com.example.gachonhub.domain.file.UserFileRepository;
 import com.example.gachonhub.domain.question.PostQuestion;
 import com.example.gachonhub.domain.question.QuestionRepository;
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.payload.request.QuestionRequestDto;
 import com.google.common.io.ByteStreams;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,27 +37,10 @@ class PostQuestionServiceTest {
     private QuestionRepository questionRepository;
 
     @Autowired
-    private FileRepository fileRepository;
+    private UserFileRepository userFileRepository;
 
     @Autowired
     private EntityManager entityManager;
-
-//    @Nested
-//    @DisplayName("질문글 수정 테스트")
-//    @Rollback(false)
-//    class PostQuestionUpdateTest {
-//
-//        @Test
-//        @DisplayName("성공")
-//        void questionUpdateTest1() throws IOException, IllegalAccessException {
-//            //given
-//
-//            //when
-//
-//            //then
-//        }
-//
-//    }
 
 
 
@@ -87,10 +66,11 @@ class PostQuestionServiceTest {
     }
 
     List<UserFile> getTestFileList() throws IOException {
-        byte[] bytes = ByteStreams.toByteArray(new FileInputStream((new ClassPathResource("test/testImage.jpeg")).getFile()));
-        byte[] bytes2 = ByteStreams.toByteArray(new FileInputStream((new ClassPathResource("test/testImage2.jpeg")).getFile()));
-        UserFile userFile = UserFile.builder().image(bytes).build();
-        UserFile userFile2 = UserFile.builder().image(bytes2).build();
+
+        String url1 = "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg";
+        String url2 = "https://spring.io/images/spring-initializr-4291cc0115eb104348717b82161a81de.svg";
+        UserFile userFile = UserFile.builder().imageUrl(url1).build();
+        UserFile userFile2 = UserFile.builder().imageUrl(url2).build();
 
         List<UserFile> list = new ArrayList<>();
         list.add(userFile);
