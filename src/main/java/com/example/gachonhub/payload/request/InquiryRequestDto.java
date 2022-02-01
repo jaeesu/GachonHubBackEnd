@@ -50,14 +50,14 @@ public class InquiryRequestDto {
         }
     }
 
-    public PostInquiry toEntity(User user, byte[] bytes) {
+    public PostInquiry toEntity(User user, String url) {
 
         return PostInquiry.builder()
                 .id(this.id)
                 .userId(user)
                 .title(this.title)
                 .content(this.content)
-                .img(bytes)
+                .imgUrl(url)
                 .password(this.password)
                 .secret(this.secret)
                 .build();

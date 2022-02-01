@@ -13,6 +13,7 @@ import com.example.gachonhub.payload.response.ResponseUtil;
 import com.example.gachonhub.security.CurrentUser;
 import com.example.gachonhub.security.UserPrincipal;
 import com.example.gachonhub.service.QuestionService;
+import com.example.gachonhub.service.UserFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,6 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final UserRepository userRepository;
-
     @GetMapping
     public ResponseEntity<?> findAllQuestionPosts(@RequestParam("page") int page) {
         QuestionListResponseDto allQuestionPostsByPage = questionService.findAllQuestionPostsByPage(page);
