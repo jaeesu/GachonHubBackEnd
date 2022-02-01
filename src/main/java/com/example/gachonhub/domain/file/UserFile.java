@@ -7,7 +7,6 @@ import javax.persistence.*;
 
 @Getter
 @Entity
-@Table(name = "user_file")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,8 +21,9 @@ public class UserFile {
     @JoinColumn(name = "post_question_id")
     private PostQuestion postQuestionId;
 
-    @Lob
-    private byte[] image;
+    private String realName;
+
+    private String imageUrl;
 
     public void updateQuestion(PostQuestion postQuestion) {
         this.postQuestionId = postQuestion;

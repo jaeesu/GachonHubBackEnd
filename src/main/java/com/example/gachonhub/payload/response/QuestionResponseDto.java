@@ -48,12 +48,12 @@ public class QuestionResponseDto {
     public static class FileResponseDto {
         private Long id;
         private Long questionId;
-        private byte[] image;
+        private String image;
 
         public FileResponseDto(UserFile userFile) {
             this.id = userFile.getId();
             this.questionId = userFile.getPostQuestionId().getId();
-            this.image = userFile.getImage();
+            this.image = userFile.getImageUrl();
         }
     }
 

@@ -36,8 +36,9 @@ public class Comment {
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 
+    @Builder.Default
     @Column(name = "write_at")
-    private Timestamp writeAt;
+    private Timestamp writeAt = new Timestamp(System.currentTimeMillis());
 
     @OneToMany
     List<Likes> likesList = new ArrayList<>();

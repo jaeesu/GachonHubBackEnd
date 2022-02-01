@@ -36,6 +36,7 @@ import java.util.Optional;
 import static com.example.gachonhub.domain.user.User.Role.USER;
 import static com.example.gachonhub.util.ErrorUtil.NOT_FOUND_CONTENT_ID;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.doThrow;
@@ -44,7 +45,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ActiveProfiles("local")
+@ActiveProfiles("prod")
 @WebMvcTest(controllers = InquiryController.class,
         excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)})
 @DisplayName("문의글 api 테스트")
@@ -454,14 +455,13 @@ class InquiryControllerTest {
         @DisplayName("특정글 조회 성공")
         void findSuccessTest1() throws Exception {
             //given
-            byte[] bytes = new FileInputStream((new ClassPathResource("test/testImage.jpeg")).getFile()).readAllBytes();
-
+            String url = "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg";
             InquiryResponseDto dto = InquiryResponseDto.builder()
                     .id(1L)
                     .userId("test")
                     .title("title")
                     .content("content")
-                    .img(bytes)
+                    .img(url)
                     .writeAt(LocalDate.now())
                     .password(1234)
                     .secret(true)
@@ -480,7 +480,7 @@ class InquiryControllerTest {
                     .andExpect(jsonPath("$.data.userId").value(dto.getUserId()))
                     .andExpect(jsonPath("$.data.title").value(dto.getTitle()))
                     .andExpect(jsonPath("$.data.content").value(dto.getContent()))
-                    .andExpect(jsonPath("$.data.img").value(new String(Base64.getEncoder().encode(dto.getImg()))))
+                    .andExpect(jsonPath("$.data.img").value(url))
                     .andExpect(jsonPath("$.data.writeAt").value(dto.getWriteAt().toString()))
                     .andExpect(jsonPath("$.data.password").value(dto.getPassword()))
                     .andExpect(jsonPath("$.data.secret").value(dto.isSecret()));
@@ -504,7 +504,8 @@ class InquiryControllerTest {
 
             InquiryListResponseDto dto = new InquiryListResponseDto(1, 1, list);
 
-            given(inquiryService.findAllByPage(any())).willReturn(dto);
+            //any() => anyInt()
+            given(inquiryService.findAllByPage(anyInt())).willReturn(dto);
 
             //when
             ResultActions page = mockMvc.perform(

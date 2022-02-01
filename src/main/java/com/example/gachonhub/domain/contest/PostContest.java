@@ -30,6 +30,7 @@ public class PostContest {
     private String content;
 
     @ManyToOne
+    @JoinColumn(name = "category_id")
     private SubCategory categoryId;
 
     private Integer people;
@@ -40,7 +41,8 @@ public class PostContest {
 
     private Integer hit;
 
-    private Timestamp writeAt;
+    @Builder.Default
+    private Timestamp writeAt = new Timestamp(System.currentTimeMillis());
 
     @Lob
     private byte[] image;
