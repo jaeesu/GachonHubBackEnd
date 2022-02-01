@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ActiveProfiles("local")
+@ActiveProfiles("prod")
 @WebMvcTest(controllers = NoticeController.class,
         excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)})
 @DisplayName("공지사항 api 테스트")
@@ -182,7 +182,7 @@ class NoticeControllerTest {
             );
 
             //then
-            perform.andExpect(status().isNotFound());
+            perform.andExpect(status().isBadRequest());
         }
     }
 

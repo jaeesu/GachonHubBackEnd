@@ -33,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-@ActiveProfiles("local")
+@ActiveProfiles("prod")
 @DisplayName("질문글 서비스 테스트")
 class PostQuestionServiceTest {
 
