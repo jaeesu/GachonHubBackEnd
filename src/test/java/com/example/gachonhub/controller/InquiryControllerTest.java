@@ -36,6 +36,7 @@ import java.util.Optional;
 import static com.example.gachonhub.domain.user.User.Role.USER;
 import static com.example.gachonhub.util.ErrorUtil.NOT_FOUND_CONTENT_ID;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.doThrow;
@@ -44,7 +45,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ActiveProfiles("local")
+@ActiveProfiles("prod")
 @WebMvcTest(controllers = InquiryController.class,
         excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)})
 @DisplayName("문의글 api 테스트")
@@ -504,7 +505,8 @@ class InquiryControllerTest {
 
             InquiryListResponseDto dto = new InquiryListResponseDto(1, 1, list);
 
-            given(inquiryService.findAllByPage(any())).willReturn(dto);
+            //any() => anyInt()
+            given(inquiryService.findAllByPage(anyInt())).willReturn(dto);
 
             //when
             ResultActions page = mockMvc.perform(
