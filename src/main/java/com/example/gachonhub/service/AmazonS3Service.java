@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
@@ -56,7 +57,12 @@ public class AmazonS3Service {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(fileName.getBytes(StandardCharsets.UTF_8));
             byte[] bytes = md.digest();
-            return new String(bytes);
+            StringBuilder stringBuilder = new StringBuilder();
+            for (byte b : bytes) {
+                String hexString = String.format("%02x", b);
+                stringBuilder.append(hexString);
+            }
+            return stringBuilder.toString();
         } catch(NoSuchAlgorithmException e){
             throw new NullPointerException();
         }
