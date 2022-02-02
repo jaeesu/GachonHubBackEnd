@@ -26,6 +26,10 @@ public class RedisCustomTemplate {
         return stringValueOperations.get(key);
     }
 
+    public void deleteRedisStringValue(String key) {
+        redisTemplate.delete(key);
+    }
+
     public String setRedisTokenFullValue(String key, String value, long timeout, TimeUnit unit) {
         ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
         stringValueOperations.set(key, value, timeout, unit);
