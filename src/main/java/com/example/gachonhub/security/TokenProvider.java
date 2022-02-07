@@ -14,7 +14,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 
-import static com.example.gachonhub.util.Utils.TokenType.X_AUTH_TOKEN;
+import static com.example.gachonhub.util.Utils.TokenType.AUTHORIZATION;
 
 @Service
 @Slf4j
@@ -33,7 +33,7 @@ public class TokenProvider {
                 .setIssuedAt(new Date())
                 .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret());
 
-        if (type.equals(X_AUTH_TOKEN)) {
+        if (type.equals(AUTHORIZATION)) {
             return jwtBuilder
                     .setSubject(Long.toString(userPrincipal.getId()))
                     .setExpiration(new Date(now.getTime() + appProperties.getAuth().getAccessTokenExpirationMsec()))

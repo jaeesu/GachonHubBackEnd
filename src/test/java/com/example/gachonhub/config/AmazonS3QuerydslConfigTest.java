@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 
 @SpringBootTest
-class AmazonS3ConfigTest {
+class AmazonS3QuerydslConfigTest {
 
     @Autowired
     private AmazonS3Client amazonS3Client;

@@ -19,26 +19,26 @@ public class User {
 
     @Id
     @Column(name = "user_id")
-    private Long id; //id
+    private Long id;
 
     private String nickname;
 
     private String name; //login
 
-    private String password;
-
-    private String avatar_url; //avatar_url
+    private String avatarUrl; //avatar_url
 
     private String company;
 
     private String description;
+
+    private String major;
 
     private Boolean graduate;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private String created_at;
+    private String createdAt;
 
     private String githubToken;
 
@@ -46,13 +46,15 @@ public class User {
         ADMIN, USER,
     }
 
-    //set => list 오류 사라짐
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    private List<UserSns> sns = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(cascade = CascadeType.ALL) //persist를 빼니 doesn't have a default value
+    private Set<UserSns> sns = new HashSet<>();
 
+    @Builder.Default
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private Set<UserRepos> repos = new HashSet<>();
 
+    @Builder.Default
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private Set<UserToTeam> groups = new HashSet<>();
 }

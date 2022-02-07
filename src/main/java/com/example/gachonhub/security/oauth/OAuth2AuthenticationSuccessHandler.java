@@ -1,13 +1,11 @@
 package com.example.gachonhub.security.oauth;
 
-import com.example.gachonhub.redisTemplate.RedisCustomTemplate;
 import com.example.gachonhub.exception.BadRequestException;
+import com.example.gachonhub.redisTemplate.RedisCustomTemplate;
 import com.example.gachonhub.security.AppProperties;
 import com.example.gachonhub.security.CookieUtils;
 import com.example.gachonhub.security.TokenProvider;
 import com.example.gachonhub.security.UserPrincipal;
-import com.example.gachonhub.util.Utils;
-import com.example.gachonhub.util.Utils.TokenType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -15,17 +13,17 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.security.Principal;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static com.example.gachonhub.security.oauth.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static com.example.gachonhub.util.Utils.TokenType.AUTHORIZATION;
+import static com.example.gachonhub.util.Utils.TokenType.REFRESH;
 
 @Component
 @Slf4j
@@ -65,10 +63,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         /** access token + refresh token 생성 및 전송 */
         //access token 생성
-        String accessToken = tokenProvider.createJwtToken(authentication, TokenType.X_AUTH_TOKEN);
+        String accessToken = tokenProvider.createJwtToken(authentication, AUTHORIZATION);
 
         //refresh token 생성 & redis 저장
-        String refreshToken = tokenProvider.createJwtToken(authentication, TokenType.REFRESH_TOKEN);
+        String refreshToken = tokenProvider.createJwtToken(authentication, REFRESH);
         redisCustomTemplate.setRedisTokenFullValue(
                 String.valueOf(((UserPrincipal) authentication.getPrincipal()).getId()),
                 refreshToken, 999999999999L, TimeUnit.MICROSECONDS); //시간 후 자동 삭제
@@ -76,8 +74,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         //token 정보 다시 저장
 
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam(TokenType.X_AUTH_TOKEN.getValue(), accessToken)
-                .queryParam(TokenType.REFRESH_TOKEN.getValue(), refreshToken)
+                .queryParam(AUTHORIZATION.getValue(), accessToken)
+                .queryParam(REFRESH.getValue(), refreshToken)
                 .build().toUriString();
     }
 

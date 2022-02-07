@@ -10,8 +10,8 @@ public interface Utils {
     @Getter
     @AllArgsConstructor
     public enum TokenType {
-        X_AUTH_TOKEN("X-AUTH-TOKEN"),
-        REFRESH_TOKEN("REFRESH-TOKEN");
+        AUTHORIZATION("AUTHORIZATION"),
+        REFRESH("REFRESH");
 
         private String value;
     }
