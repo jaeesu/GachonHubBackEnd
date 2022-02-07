@@ -35,12 +35,19 @@ public class QuestionService {
     @Transactional
     public Long saveQuestionPost(User user, QuestionRequestDto dto) {
 
-        List<UserFile> userFiles = fileService.uploadMultiPartToUserFile(dto.getFiles());
+        List<UserFile> userFiles = null;
+
+        if (dto.getFiles() != null) {
+            userFiles = fileService.uploadMultiPartToUserFile(dto.getFiles());
+        }
         SubCategory subCategory = subCategoryRepository.findById(dto.getCategory())
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 세부 카테고리입니다."));
 
         PostQuestion postQuestion = dto.toEntity(user, subCategory, userFiles);
-        userFiles.forEach(m -> m.updateQuestion(postQuestion));
+
+        if (dto.getFiles() != null) {
+            userFiles.forEach(m -> m.updateQuestion(postQuestion));
+        }
 
         return questionRepository.save(postQuestion).getId();
     }

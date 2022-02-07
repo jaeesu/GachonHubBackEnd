@@ -30,5 +30,15 @@ public class UserRepos {
 
     private String lang;
 
+    private boolean main;
+
     private LocalDateTime updatedAt;
+
+    public void removeMain() {
+        this.main = false;
+    }
+
+    public void addMain() {
+        this.main = true;
+    }
 }

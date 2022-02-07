@@ -24,16 +24,8 @@ public class GithubOAuth2UserInfo {
         return (String) attributes.get("name");
     }
 
-    public String getEmail() {
-        return (String) attributes.get("email");
-    }
-
     public String getImageUrl() {
         return (String) attributes.get("avatar_url");
-    }
-
-    public String getHomeUrl() {
-        return (String) attributes.get("html_url");
     }
 
     public String getBlog() {
@@ -48,7 +40,6 @@ public class GithubOAuth2UserInfo {
         return (String) attributes.get("created_at");
     }
 
-    public String getUpdatedAt() {
-        return (String) attributes.get("updated_at");
-    }
+    public String getBio() {return (String) attributes.get("bio");}
+
 }
