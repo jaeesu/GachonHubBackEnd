@@ -4,6 +4,8 @@ import com.example.gachonhub.domain.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -17,10 +19,6 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_id")
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
     private String name;
 
@@ -39,6 +37,14 @@ public class Team {
 
     @Column(name = "recruiting_content")
     private String recruitingContent;
+
+    private String mainImage;
+
+    //main image
+
+    @Builder.Default
+    @OneToMany
+    private Set<User> users = new HashSet<>();
 
     public enum TeamType {
         STUDY, CREW

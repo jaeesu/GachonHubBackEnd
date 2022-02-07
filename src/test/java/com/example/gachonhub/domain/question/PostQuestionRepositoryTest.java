@@ -160,7 +160,7 @@ class PostQuestionRepositoryTest {
                 .id(1234L)
                 .nickname("test")
                 .role(User.Role.USER)
-                .avatar_url("http://github.com")
+                .avatarUrl("http://github.com")
                 .build();
         entityManager.persist(user);
         return user;

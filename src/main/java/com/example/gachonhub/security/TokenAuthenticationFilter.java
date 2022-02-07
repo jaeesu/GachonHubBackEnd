@@ -1,8 +1,6 @@
 package com.example.gachonhub.security;
 
-import com.example.gachonhub.redisTemplate.RedisCustomTemplate;
 import com.example.gachonhub.security.oauth.CustomUserDetailsService;
-import com.example.gachonhub.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -19,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.example.gachonhub.util.Utils.TokenType.X_AUTH_TOKEN;
+import static com.example.gachonhub.util.Utils.TokenType.AUTHORIZATION;
 
 @Slf4j
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
@@ -61,7 +59,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
              * 로직 고민 - 재발급을 위한 로직
              */
             //access 토큰 확인
-            String accessToken = getJwtFromRequest(request, X_AUTH_TOKEN.getValue());
+            String accessToken = getJwtFromRequest(request, AUTHORIZATION.getValue());
 
             //유효한 access 토큰
             if (StringUtils.hasText(accessToken) && tokenProvider.validateToken(accessToken)) {
