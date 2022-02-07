@@ -103,13 +103,13 @@ class LikesRepositoryTest {
     }
 
     User getTestUser() {
-        User test = User.builder().id(1234L).nickname("test").role(USER).avatar_url("http://github.com").build();
+        User test = User.builder().id(1234L).nickname("test").role(USER).avatarUrl("http://github.com").build();
         entityManager.persist(test);
         return test;
     }
 
     User getTestUser2() {
-        User test = User.builder().id(12345L).nickname("test2").role(USER).avatar_url("http://github.com").build();
+        User test = User.builder().id(12345L).nickname("test2").role(USER).avatarUrl("http://github.com").build();
         entityManager.persist(test);
         return test;
     }

@@ -6,9 +6,10 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
+@Setter
 @Getter
 @Builder
-@Table(name = "user_sns")
+@Table(name = "personal_sns")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserSns {
@@ -20,9 +21,24 @@ public class UserSns {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User userId; //user_id_user_id
 
     private String category;
 
     private String url;
+
+    @Getter
+    public enum SnsCategory {
+        TISTORY("tistory"),
+        GITHUB("github.com"),
+        GITHUB_BLOG("github.blog"),
+        VELOG("velog"),
+        BRUNCH("brunch");
+
+        private String title;
+
+        SnsCategory(String title) {
+            this.title = title;
+        }
+    }
 }
