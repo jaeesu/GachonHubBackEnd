@@ -26,7 +26,7 @@ public class LikesRequestDto {
     public Likes toEntity(User user, PostQuestion question) {
         return Likes.builder()
                 .user(user)
-                .postQuestion(question)
+                .postQuestionId(question)
                 .build();
     }
 
