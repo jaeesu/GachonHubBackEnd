@@ -92,11 +92,11 @@ class LikesRepositoryTest {
         PostQuestion question = PostQuestion.builder().title("title").categoryId(testCategory).content("content").userId(testUser1).build();
         entityManager.persist(question);
         User testUser2 = getTestUser2();
-        Likes likes = Likes.builder().postQuestion(question).user(testUser2).build();
+        Likes likes = Likes.builder().postQuestionId(question).user(testUser2).build();
         entityManager.persist(likes);
 
         //when
-        likesRepository.deleteByUser_IdAndPostQuestion_Id(testUser2.getId(), question.getId());
+        likesRepository.deleteByUser_IdAndPostQuestionId_Id(testUser2.getId(), question.getId());
 
         //then
         assertThat(likesRepository.findAll().size()).isEqualTo(0);
