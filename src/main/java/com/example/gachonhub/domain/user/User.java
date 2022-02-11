@@ -47,14 +47,14 @@ public class User {
     }
 
     @Builder.Default
-    @OneToMany(cascade = CascadeType.ALL) //persist를 빼니 doesn't have a default value
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL) //persist를 빼니 doesn't have a default value
     private Set<UserSns> sns = new HashSet<>();
 
     @Builder.Default
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Set<UserRepos> repos = new HashSet<>();
 
     @Builder.Default
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Set<UserToTeam> groups = new HashSet<>();
 }

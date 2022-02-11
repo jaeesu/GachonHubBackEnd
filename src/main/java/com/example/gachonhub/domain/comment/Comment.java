@@ -40,6 +40,6 @@ public class Comment {
     @Column(name = "write_at")
     private Timestamp writeAt = new Timestamp(System.currentTimeMillis());
 
-    @OneToMany
+    @OneToMany(mappedBy = "parentComment")
     List<Likes> likesList = new ArrayList<>();
 }

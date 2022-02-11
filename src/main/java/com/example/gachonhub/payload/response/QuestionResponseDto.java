@@ -106,7 +106,7 @@ public class QuestionResponseDto {
             this.id = likes.getId();
             this.userId = likes.getUser().getNickname();
             this.commentId = likes.getParentComment().getId();
-            this.questionId = likes.getPostQuestion().getId();
+            this.questionId = likes.getPostQuestionId().getId();
             this.contestId = likes.getPostContest().getId();
         }
     }

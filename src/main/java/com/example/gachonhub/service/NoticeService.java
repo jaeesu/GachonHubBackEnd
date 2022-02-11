@@ -57,7 +57,7 @@ public class NoticeService {
     }
 
     public void isCorrectAuthor(Long userId, Long postAuthorId) throws IllegalAccessException {
-        if (userId != postAuthorId) {
+        if (!userId.equals(postAuthorId)) {
             throw new IllegalAccessException();
         }
     }

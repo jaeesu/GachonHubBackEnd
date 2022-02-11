@@ -1,6 +1,6 @@
-package com.example.gachonhub.domain.group;
+package com.example.gachonhub.domain.team;
 
-import com.example.gachonhub.domain.user.User;
+import com.example.gachonhub.domain.user.relation.UserToTeam;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,29 +22,28 @@ public class Team {
 
     private String name;
 
-    private String repos;
+    private Long authorId;
+
+    private String field;
+
+    private Integer people;
+
+    private String repos; //description => readme
 
     @Column(name = "team_type")
     @Enumerated(EnumType.STRING)
     private TeamType type;
 
-    private String description;
-
-    @Column(name = "commit_count")
-    private Long commitCount;
-
-    private boolean recruiting;
-
-    @Column(name = "recruiting_content")
-    private String recruitingContent;
-
     private String mainImage;
 
-    //main image
+    @Column(name = "commit_count")
+    private Long commitCount; //d 0
+
+    private boolean recruiting; //d 0
 
     @Builder.Default
-    @OneToMany
-    private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserToTeam> users = new HashSet<>();
 
     public enum TeamType {
         STUDY, CREW
