@@ -56,7 +56,7 @@ public class CommentService {
     }
 
     public void isCorrectAuthor(Long userId, Long commentAuthorId) throws IllegalAccessException {
-        if (userId != commentAuthorId) {
+        if (!userId.equals(commentAuthorId)) {
             throw new IllegalAccessException();
         }
     }

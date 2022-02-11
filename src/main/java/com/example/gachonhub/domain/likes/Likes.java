@@ -25,7 +25,7 @@ public class Likes {
 
     @ManyToOne
     @JoinColumn(name = "post_question_id")
-    private PostQuestion postQuestion;
+    private PostQuestion postQuestionId;
 
     @ManyToOne
     @JoinColumn(name = "comment_id")

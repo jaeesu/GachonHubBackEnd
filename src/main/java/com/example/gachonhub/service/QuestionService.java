@@ -79,7 +79,7 @@ public class QuestionService {
 
     //사용자 확인
     public void isCorrectAuthor(Long userId, Long postAuthorId) throws IllegalAccessException {
-        if (userId != postAuthorId) {
+        if (!userId.equals(postAuthorId)) {
             throw new IllegalAccessException();
         }
     }

@@ -5,16 +5,13 @@ import com.example.gachonhub.domain.comment.Comment;
 import com.example.gachonhub.domain.file.UserFile;
 import com.example.gachonhub.domain.likes.Likes;
 import com.example.gachonhub.domain.user.User;
-import com.example.gachonhub.payload.request.QuestionRequestDto;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @DynamicUpdate
 @Entity
@@ -49,13 +46,13 @@ public class PostQuestion {
     @Builder.Default //애노테이션을 넣지 않으면 0이 들어가지 않는다.
     private Long hit = 0L;
 
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "postQuestionId", cascade = {CascadeType.ALL})
     private List<UserFile> userFileList = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "postQuestionId")
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "postQuestionId")
     private List<Likes> likesList = new ArrayList<>();
 
 }

@@ -43,7 +43,7 @@ public class LikesService {
 
     public void deleteLikes(User user, LikesRequestDto dto) {
         if (dto.getType().equals(QUESTION)) {
-            likesRepository.deleteByUser_IdAndPostQuestion_Id(user.getId(), dto.getId());
+            likesRepository.deleteByUser_IdAndPostQuestionId_Id(user.getId(), dto.getId());
         } else if (dto.getType().equals(QUESTION_COMMENT)) {
             likesRepository.deleteByUser_IdAndParentComment_Id(user.getId(), dto.getId());
         } else if (dto.getType().equals(CONTEST)) {
