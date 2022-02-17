@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-import static com.example.gachonhub.util.ErrorUtil.NOT_FOUND_CONTENT_ID;
+import static com.example.gachonhub.util.ErrorUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +64,7 @@ public class InquiryService {
 
     public void isCorrectAuthor(Long userId, Long postAuthorId) throws IllegalAccessException {
         if (!userId.equals(postAuthorId)) {
-            throw new IllegalAccessException();
+            throw new ResourceNotFoundException(NOT_CORRECT_USER_ID);
         }
     }
 }

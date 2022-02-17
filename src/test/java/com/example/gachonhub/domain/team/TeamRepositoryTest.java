@@ -37,7 +37,7 @@ class TeamRepositoryTest {
 
 
     @Test
-    @DisplayName("team만 삭제했을 때 orpahnremove가 되지 않는다.")
+    @DisplayName("team만 삭제해도 orphanremoval이 된다.")
     void removeTeamTest1(){
         //given
         UserToTeam relation = getTestRelation();
@@ -46,11 +46,13 @@ class TeamRepositoryTest {
         teamRepository.deleteById(relation.getTeam().getId());
 
         //then
-        Assertions.assertThrows(DataIntegrityViolationException.class, () -> userToTeamRepository.findAll());
+        assertThat(userToTeamRepository.findAll().size()).isEqualTo(0);
+        assertThat(userRepository.getById(relation.getUser().getId()).getGroups().size()).isEqualTo(0);
+
     }
 
     @Test
-    @DisplayName("user만 삭제했을 때 orpahnremove가 되지 않는다.")
+    @DisplayName("user만 삭제해도 orphanremoval이 된다.")
     void removeTeamTest2(){
         //given
         UserToTeam relation = getTestRelation();
@@ -59,7 +61,8 @@ class TeamRepositoryTest {
         userRepository.deleteById(relation.getUser().getId());
 
         //then
-        Assertions.assertThrows(DataIntegrityViolationException.class, () -> userToTeamRepository.findAll());
+        assertThat(userToTeamRepository.findAll().size()).isEqualTo(0);
+        assertThat(teamRepository.getById(relation.getTeam().getId()).getUsers().size()).isEqualTo(0);
     }
 
     @Test

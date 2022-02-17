@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.example.gachonhub.util.ErrorUtil.NOT_FOUND_CONTENT_ID;
+import static com.example.gachonhub.util.ErrorUtil.*;
 
 @Slf4j
 @Service
@@ -80,7 +80,7 @@ public class QuestionService {
     //사용자 확인
     public void isCorrectAuthor(Long userId, Long postAuthorId) throws IllegalAccessException {
         if (!userId.equals(postAuthorId)) {
-            throw new IllegalAccessException();
+            throw new ResourceNotFoundException(NOT_CORRECT_USER_ID);
         }
     }
 }

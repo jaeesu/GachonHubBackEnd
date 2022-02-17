@@ -11,7 +11,7 @@ import com.example.gachonhub.payload.request.CommentRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.example.gachonhub.util.ErrorUtil.NOT_FOUND_CONTENT_ID;
+import static com.example.gachonhub.util.ErrorUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +57,7 @@ public class CommentService {
 
     public void isCorrectAuthor(Long userId, Long commentAuthorId) throws IllegalAccessException {
         if (!userId.equals(commentAuthorId)) {
-            throw new IllegalAccessException();
+            throw new ResourceNotFoundException(NOT_CORRECT_USER_ID);
         }
     }
 }
