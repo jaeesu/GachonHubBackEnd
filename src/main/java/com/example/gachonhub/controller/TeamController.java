@@ -3,6 +3,10 @@ package com.example.gachonhub.controller;
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.domain.user.UserRepository;
 import com.example.gachonhub.exception.ResourceNotFoundException;
+import com.example.gachonhub.payload.ValidationGroups;
+import com.example.gachonhub.payload.ValidationGroups.generalGroup;
+import com.example.gachonhub.payload.ValidationGroups.saveGroup;
+import com.example.gachonhub.payload.ValidationGroups.updateGroup;
 import com.example.gachonhub.payload.request.TeamAddMemberRequestDto;
 import com.example.gachonhub.payload.request.TeamRequestDto;
 import com.example.gachonhub.payload.response.TeamListResponseDto;
@@ -12,6 +16,7 @@ import com.example.gachonhub.security.UserPrincipal;
 import com.example.gachonhub.service.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static com.example.gachonhub.payload.response.ResponseUtil.success;
@@ -42,14 +47,14 @@ public class TeamController {
     }
 
     @PostMapping
-    public ResponseEntity<?> makeTeam(@CurrentUser UserPrincipal userPrincipal, @ModelAttribute TeamRequestDto dto) throws IllegalAccessException {
+    public ResponseEntity<?> makeTeam(@CurrentUser UserPrincipal userPrincipal, @ModelAttribute @Validated({saveGroup.class, generalGroup.class}) TeamRequestDto dto) throws IllegalAccessException {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
         teamService.saveTeam(user, dto);
         return success("팀 생성 성공");
     }
 
     @PutMapping
-    public ResponseEntity<?> updateTeamInfo(@CurrentUser UserPrincipal userPrincipal, @ModelAttribute TeamRequestDto dto) throws IllegalAccessException {
+    public ResponseEntity<?> updateTeamInfo(@CurrentUser UserPrincipal userPrincipal, @ModelAttribute @Validated({updateGroup.class, generalGroup.class}) TeamRequestDto dto) throws IllegalAccessException {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
         teamService.updateTeamInfo(user, dto);
         return success("팀 정보 수정 완료");
@@ -63,7 +68,7 @@ public class TeamController {
     }
 
     @PostMapping("/member")
-    public ResponseEntity<?> addMember(@CurrentUser UserPrincipal userPrincipal, @RequestBody TeamAddMemberRequestDto dto) throws IllegalAccessException {
+    public ResponseEntity<?> addMember(@CurrentUser UserPrincipal userPrincipal, @RequestBody @Validated TeamAddMemberRequestDto dto) throws IllegalAccessException {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
         teamService.addMember(user, dto);
         return success("팀 멤버 추가 완료");
