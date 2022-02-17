@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
-import static com.example.gachonhub.util.ErrorUtil.NOT_FOUND_CONTENT_ID;
+import static com.example.gachonhub.util.ErrorUtil.*;
 
 @Slf4j
 @Service
@@ -66,7 +66,7 @@ public class TeamService {
         UserToTeam userToTeam = team.getUsers().stream()
                 .filter(x -> x.getUser().getId().equals(user.getId()))
                 .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException());
+                .orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_CONTENT_ID));
         team.getUsers().remove(userToTeam);
         user.getGroups().remove(userToTeam);
     }
@@ -100,18 +100,17 @@ public class TeamService {
     }
 
     public Team findTeamById(Long id) {
-        return teamRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_CONTENT_ID));
+        return teamRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_GROUP_ID));
     }
 
     public User findUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_CONTENT_ID));
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
 
     }
 
-    public void isCorrectAuthor(Long userId, Long postAuthorId) throws IllegalAccessException {
+    public void isCorrectAuthor(Long userId, Long postAuthorId) {
         if (!userId.equals(postAuthorId)) {
-            log.warn("\n\n\n\n================" + userId + "  " + postAuthorId);
-            throw new IllegalAccessException();
+            throw new ResourceNotFoundException(NOT_CORRECT_USER_ID);
         }
     }
 }
