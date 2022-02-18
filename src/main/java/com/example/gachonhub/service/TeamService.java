@@ -5,8 +5,10 @@ import com.example.gachonhub.domain.team.TeamRepository;
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.domain.user.UserRepository;
 import com.example.gachonhub.domain.user.relation.UserToTeam;
+import com.example.gachonhub.exception.NotAccessUserException;
 import com.example.gachonhub.exception.ResourceNotFoundException;
 import com.example.gachonhub.payload.request.TeamAddMemberRequestDto;
+import com.example.gachonhub.payload.request.TeamContentRequestDto;
 import com.example.gachonhub.payload.request.TeamRequestDto;
 import com.example.gachonhub.payload.response.TeamListResponseDto;
 import com.example.gachonhub.payload.response.TeamResponseDto;
@@ -87,7 +89,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void deleteMemmber(User user, TeamAddMemberRequestDto dto) throws IllegalAccessException {
+    public void deleteMemmber(User user, TeamAddMemberRequestDto dto)  {
         Team team = findTeamById(dto.getTeamId());
         isCorrectAuthor(user.getId(), team.getAuthorId());
 
@@ -97,6 +99,18 @@ public class TeamService {
                 .orElseThrow(() -> new NoSuchElementException());
         team.getUsers().remove(relation);
         user.getGroups().remove(relation);
+    }
+
+    public void updateRecruitingContent(User user, TeamContentRequestDto dto) {
+        Team team = findTeamById(dto.getTeamId());
+        isCorrectAuthor(user.getId(), team.getAuthorId());
+        team.updateContent(dto.getContent());
+    }
+
+    public void changeRecruitingStatus(User user, Long id) {
+        Team team = findTeamById(id);
+        isCorrectAuthor(user.getId(), team.getAuthorId());
+        team.changeRecruiting();
     }
 
     public Team findTeamById(Long id) {
@@ -110,7 +124,9 @@ public class TeamService {
 
     public void isCorrectAuthor(Long userId, Long postAuthorId) {
         if (!userId.equals(postAuthorId)) {
-            throw new ResourceNotFoundException(NOT_CORRECT_USER_ID);
+            throw new NotAccessUserException(NOT_CORRECT_USER_ID);
         }
     }
+
+
 }

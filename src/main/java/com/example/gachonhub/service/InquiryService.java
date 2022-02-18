@@ -1,9 +1,9 @@
 package com.example.gachonhub.service;
 
-import com.example.gachonhub.domain.file.UserFile;
 import com.example.gachonhub.domain.inquiry.PostInquiry;
 import com.example.gachonhub.domain.inquiry.PostInquiryRepository;
 import com.example.gachonhub.domain.user.User;
+import com.example.gachonhub.exception.NotAccessUserException;
 import com.example.gachonhub.exception.ResourceNotFoundException;
 import com.example.gachonhub.payload.request.InquiryRequestDto;
 import com.example.gachonhub.payload.response.InquiryListResponseDto;
@@ -15,7 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-import static com.example.gachonhub.util.ErrorUtil.*;
+import static com.example.gachonhub.util.ErrorUtil.NOT_CORRECT_USER_ID;
+import static com.example.gachonhub.util.ErrorUtil.NOT_FOUND_CONTENT_ID;
 
 @Service
 @RequiredArgsConstructor
@@ -62,9 +63,9 @@ public class InquiryService {
         return inquiryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_CONTENT_ID));
     }
 
-    public void isCorrectAuthor(Long userId, Long postAuthorId) throws IllegalAccessException {
+    public void isCorrectAuthor(Long userId, Long postAuthorId) {
         if (!userId.equals(postAuthorId)) {
-            throw new ResourceNotFoundException(NOT_CORRECT_USER_ID);
+            throw new NotAccessUserException(NOT_CORRECT_USER_ID);
         }
     }
 }
