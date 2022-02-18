@@ -6,6 +6,7 @@ import com.example.gachonhub.domain.file.UserFile;
 import com.example.gachonhub.domain.question.PostQuestion;
 import com.example.gachonhub.domain.question.QuestionRepository;
 import com.example.gachonhub.domain.user.User;
+import com.example.gachonhub.exception.NotAccessUserException;
 import com.example.gachonhub.exception.ResourceNotFoundException;
 import com.example.gachonhub.payload.request.QuestionRequestDto;
 import com.example.gachonhub.payload.response.QuestionListResponseDto;
@@ -18,10 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
-import static com.example.gachonhub.util.ErrorUtil.*;
+import static com.example.gachonhub.util.ErrorUtil.NOT_CORRECT_USER_ID;
+import static com.example.gachonhub.util.ErrorUtil.NOT_FOUND_CONTENT_ID;
 
 @Slf4j
 @Service
@@ -78,9 +79,9 @@ public class QuestionService {
     }
 
     //사용자 확인
-    public void isCorrectAuthor(Long userId, Long postAuthorId) throws IllegalAccessException {
+    public void isCorrectAuthor(Long userId, Long postAuthorId) {
         if (!userId.equals(postAuthorId)) {
-            throw new ResourceNotFoundException(NOT_CORRECT_USER_ID);
+            throw new NotAccessUserException(NOT_CORRECT_USER_ID);
         }
     }
 }
