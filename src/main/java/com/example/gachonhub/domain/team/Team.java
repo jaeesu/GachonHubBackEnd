@@ -41,6 +41,8 @@ public class Team {
 
     private boolean recruiting; //d 0
 
+    private String recruitingContent;
+
     @Builder.Default
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserToTeam> users = new HashSet<>();
