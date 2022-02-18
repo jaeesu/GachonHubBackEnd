@@ -6,11 +6,13 @@ import com.example.gachonhub.domain.comment.Comment;
 import com.example.gachonhub.domain.contest.PostContest;
 import com.example.gachonhub.domain.question.PostQuestion;
 import com.example.gachonhub.domain.user.User;
+import com.example.gachonhub.test.TestConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.EntityManager;
@@ -24,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("prod")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DataJpaTest
+@Import(TestConfig.class)
 @DisplayName("공감 레포지토리 테스트")
 class LikesRepositoryTest {
 

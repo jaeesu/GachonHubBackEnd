@@ -31,8 +31,10 @@ public class User {
 
     private String description;
 
+    @Setter
     private String major;
 
+    @Setter
     private Boolean graduate;
 
     @Enumerated(EnumType.STRING)
