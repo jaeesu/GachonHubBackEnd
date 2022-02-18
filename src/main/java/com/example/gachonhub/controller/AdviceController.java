@@ -1,6 +1,7 @@
 package com.example.gachonhub.controller;
 
 import com.example.gachonhub.exception.BadRequestException;
+import com.example.gachonhub.exception.NotAccessUserException;
 import com.example.gachonhub.exception.ResourceNotFoundException;
 import com.example.gachonhub.payload.response.ResponseUtil;
 import com.example.gachonhub.payload.response.ResponseUtil.DefaultResponse;
@@ -20,6 +21,11 @@ public class AdviceController {
     public ResponseEntity<DefaultResponse<String>> BadRequestHandler(Exception e, BindingResult result) {
         return ResponseUtil.fail(HttpStatus.BAD_REQUEST, result.getFieldError().getDefaultMessage());
         //e.getmessage와의 차이점 확인하기
+    }
+
+    @ExceptionHandler(value = {NotAccessUserException.class})
+    public ResponseEntity<DefaultResponse<String>> NotAccessUserHandler(Exception e) {
+        return ResponseUtil.fail(HttpStatus.UNAUTHORIZED, e.getMessage());
     }
 
     @ExceptionHandler(value = {ResourceNotFoundException.class, HttpMessageNotReadableException.class})

@@ -2,16 +2,17 @@ package com.example.gachonhub.service;
 
 import com.example.gachonhub.domain.comment.Comment;
 import com.example.gachonhub.domain.comment.CommentRepository;
-import com.example.gachonhub.domain.notice.PostNotice;
 import com.example.gachonhub.domain.question.PostQuestion;
 import com.example.gachonhub.domain.question.QuestionRepository;
 import com.example.gachonhub.domain.user.User;
+import com.example.gachonhub.exception.NotAccessUserException;
 import com.example.gachonhub.exception.ResourceNotFoundException;
 import com.example.gachonhub.payload.request.CommentRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.example.gachonhub.util.ErrorUtil.*;
+import static com.example.gachonhub.util.ErrorUtil.NOT_CORRECT_USER_ID;
+import static com.example.gachonhub.util.ErrorUtil.NOT_FOUND_CONTENT_ID;
 
 @Service
 @RequiredArgsConstructor
@@ -55,9 +56,9 @@ public class CommentService {
         );
     }
 
-    public void isCorrectAuthor(Long userId, Long commentAuthorId) throws IllegalAccessException {
+    public void isCorrectAuthor(Long userId, Long commentAuthorId)  {
         if (!userId.equals(commentAuthorId)) {
-            throw new ResourceNotFoundException(NOT_CORRECT_USER_ID);
+            throw new NotAccessUserException(NOT_CORRECT_USER_ID);
         }
     }
 }

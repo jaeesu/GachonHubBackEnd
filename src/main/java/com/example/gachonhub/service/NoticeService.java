@@ -3,6 +3,7 @@ package com.example.gachonhub.service;
 import com.example.gachonhub.domain.notice.PostNotice;
 import com.example.gachonhub.domain.notice.PostNoticeRepository;
 import com.example.gachonhub.domain.user.User;
+import com.example.gachonhub.exception.NotAccessUserException;
 import com.example.gachonhub.exception.ResourceNotFoundException;
 import com.example.gachonhub.payload.request.NoticeRequestDto;
 import com.example.gachonhub.payload.response.NoticeListResponseDto;
@@ -12,7 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import static com.example.gachonhub.util.ErrorUtil.*;
+import static com.example.gachonhub.util.ErrorUtil.NOT_CORRECT_USER_ID;
+import static com.example.gachonhub.util.ErrorUtil.NOT_FOUND_CONTENT_ID;
 
 @Service
 @RequiredArgsConstructor
@@ -56,9 +58,9 @@ public class NoticeService {
         );
     }
 
-    public void isCorrectAuthor(Long userId, Long postAuthorId) throws IllegalAccessException {
+    public void isCorrectAuthor(Long userId, Long postAuthorId) {
         if (!userId.equals(postAuthorId)) {
-            throw new ResourceNotFoundException(NOT_CORRECT_USER_ID);
+            throw new NotAccessUserException(NOT_CORRECT_USER_ID);
         }
     }
 }
