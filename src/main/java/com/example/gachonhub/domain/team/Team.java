@@ -50,4 +50,12 @@ public class Team {
     public enum TeamType {
         STUDY, CREW
     }
+
+    public void updateContent(String content) {
+        this.recruitingContent = content;
+    }
+
+    public void changeRecruiting() {
+        this.recruiting = (this.recruiting) ? false : true;
+    }
 }
