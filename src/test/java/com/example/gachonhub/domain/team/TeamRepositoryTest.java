@@ -4,12 +4,14 @@ import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.domain.user.UserRepository;
 import com.example.gachonhub.domain.user.relation.UserToTeam;
 import com.example.gachonhub.domain.user.relation.UserToTeamRepository;
+import com.example.gachonhub.test.TestConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -20,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("prod")
 @DataJpaTest
+@Import(TestConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class TeamRepositoryTest {
 

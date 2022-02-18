@@ -8,11 +8,13 @@ import com.example.gachonhub.domain.question.PostQuestion;
 import com.example.gachonhub.domain.question.QuestionRepository;
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.payload.request.QuestionRequestDto;
+import com.example.gachonhub.test.TestConfig;
 import com.google.common.io.ByteStreams;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
@@ -30,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @ActiveProfiles("prod")
+@Import(TestConfig.class)
 @DisplayName("질문글 서비스 테스트")
 class PostQuestionServiceTest {
 

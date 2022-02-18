@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface UserReposRepository extends JpaRepository<UserRepos, Long> {
+public interface UserReposRepository extends JpaRepository<UserRepos, Long>, UserReposCustomRepository {
 
     List<UserRepos> findAllByUser_IdAndMainIsTrue(Long id);
 

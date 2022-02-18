@@ -3,6 +3,7 @@ package com.example.gachonhub.payload.request;
 import com.example.gachonhub.domain.user.User;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -17,24 +18,16 @@ public class UserInfoRequestDto {
 
     @Getter
     public static class UserSnsDto {
+
         private Long id;
+        @NotNull(message = "sns 카테고리가 누락되었습니다.")
         private String category;
+        @NotNull(message = "sns 주소가 누락되었습니다.")
         private String url;
     }
 
-    public User toEntity(User user) {
-        return User.builder()
-                .id(user.getId())
-                .nickname(user.getNickname())
-                .name(user.getName())
-                .avatarUrl(user.getAvatarUrl())
-                .company(user.getCompany())
-                .description(user.getDescription())
-                .major(this.getMajor())
-                .graduate(this.isGraduate())
-                .role(user.getRole())
-                .createdAt(user.getCreatedAt())
-                .githubToken(user.getGithubToken())
-                .build();
+    public void toEntity(User user, UserInfoRequestDto dto) {
+        user.setMajor(dto.getMajor());
+        user.setGraduate(dto.isGraduate());
     }
 }

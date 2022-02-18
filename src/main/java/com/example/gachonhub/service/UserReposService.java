@@ -1,8 +1,8 @@
 package com.example.gachonhub.service;
 
 import com.example.gachonhub.domain.user.User;
-import com.example.gachonhub.domain.user.userInfo.UserRepos;
 import com.example.gachonhub.domain.user.userInfo.UserReposRepository;
+import com.example.gachonhub.payload.request.ReposRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +14,9 @@ public class UserReposService {
 
     private final UserReposRepository reposRepository;
 
-    public void updateMainRepository(User user, List<Integer> repos) {
-        List<UserRepos> reposList = reposRepository.findAllByUser_IdAndMainIsTrue(user.getId());
-        reposList.stream()
+    public void updateMainRepository(User user, ReposRequestDto repos) {
+        user.getRepos()
                 .forEach(x -> x.removeMain());
-        List<UserRepos> repos1 = reposRepository.findAllByIds(repos);
-        repos1.stream()
-                .forEach(x -> x.addMain());
+        reposRepository.updateMainRepository(user, repos.getRepos());
     }
 }
