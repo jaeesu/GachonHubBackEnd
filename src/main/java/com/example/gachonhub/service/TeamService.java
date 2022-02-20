@@ -62,7 +62,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void deleteTeam(User user, Long id) throws IllegalAccessException {
+    public void deleteTeam(User user, Long id) {
         Team team = findTeamById(id);
         isCorrectAuthor(user.getId(), team.getAuthorId());
 
@@ -75,7 +75,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void addMember(User user, TeamAddMemberRequestDto dto) throws IllegalAccessException {
+    public void addMember(User user, TeamAddMemberRequestDto dto) {
         Team team = findTeamById(dto.getTeamId());
         isCorrectAuthor(user.getId(), team.getAuthorId());
         User newMember = findUserById(dto.getMemberId());

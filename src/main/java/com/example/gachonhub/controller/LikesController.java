@@ -35,7 +35,7 @@ public class LikesController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteLikes(@CurrentUser UserPrincipal userPrincipal, @RequestBody @Valid LikesRequestDto dto) throws IllegalAccessException {
+    public ResponseEntity<?> deleteLikes(@CurrentUser UserPrincipal userPrincipal, @RequestBody @Valid LikesRequestDto dto)  {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
         likesService.deleteLikes(user, dto);
         return success("좋아요 반응 삭제 완료");

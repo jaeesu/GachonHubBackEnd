@@ -49,7 +49,7 @@ public class NoticeController {
     }
 
     @DeleteMapping ("/{postId}")
-    public ResponseEntity<?> deleteNoticePost(@CurrentUser UserPrincipal userPrincipal, @PathVariable("postId") Long id) throws IllegalAccessException {
+    public ResponseEntity<?> deleteNoticePost(@CurrentUser UserPrincipal userPrincipal, @PathVariable("postId") Long id)  {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
         noticeService.deleteNoticePost(user, id);
         return success("공지사항 삭제 완료");
@@ -57,7 +57,7 @@ public class NoticeController {
 
     @PutMapping
     public ResponseEntity<?> updateNoticePost(@CurrentUser UserPrincipal userPrincipal,
-                                              @RequestBody @Validated({generalGroup.class, updateGroup.class}) NoticeRequestDto dto) throws IllegalAccessException {
+                                              @RequestBody @Validated({generalGroup.class, updateGroup.class}) NoticeRequestDto dto) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
         noticeService.updateNoticePost(user, dto);
         return success("곧지사항 수정 완료");
