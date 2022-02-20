@@ -1,6 +1,7 @@
 package com.example.gachonhub.service;
 
 import com.example.gachonhub.domain.team.Team;
+import com.example.gachonhub.domain.team.Team.TeamType;
 import com.example.gachonhub.domain.team.TeamRepository;
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.domain.user.UserRepository;
@@ -33,9 +34,9 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final AmazonS3Service s3Service;
 
-    public TeamListResponseDto findAllTeamsByPage(int page) {
+    public TeamListResponseDto findAllTeamsByPage(int page, String type) {
         PageRequest pageRequest = PageRequest.of(page, 15, Sort.by("id").descending());
-        Page<Team> teams = teamRepository.findAll(pageRequest);
+        Page<Team> teams = teamRepository.findAllByType(pageRequest, TeamType.valueOf(type));
         return TeamListResponseDto.fromPagable(teams);
     }
 

@@ -35,8 +35,8 @@ public class TeamController {
     private final TeamService teamService;
 
     @GetMapping
-    public ResponseEntity<?> getAllTeams(@RequestParam("page") int page) {
-        TeamListResponseDto teams = teamService.findAllTeamsByPage(page);
+    public ResponseEntity<?> getAllTeams(@RequestParam("page") int page, @RequestParam("type") String type) {
+        TeamListResponseDto teams = teamService.findAllTeamsByPage(page, type);
         return success(teams);
     }
 
