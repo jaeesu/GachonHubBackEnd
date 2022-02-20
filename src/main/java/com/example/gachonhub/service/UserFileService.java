@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class UserFileService {
         return userFiles;
     }
 
-    public UserFile uploadMultiPartToUserFile(MultipartFile file) {
+    public UserFile uploadMultiPartToUserFile(MultipartFile file)  {
         if (file.isEmpty()) return null;
         UserFile userFile = UserFile.builder()
                 .realName(file.getOriginalFilename())
