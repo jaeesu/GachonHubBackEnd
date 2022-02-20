@@ -28,7 +28,7 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public void updateComment(User user, CommentRequestDto dto) throws IllegalAccessException {
+    public void updateComment(User user, CommentRequestDto dto) {
         PostQuestion questionById = findQuestionById(dto.getQuestionId());
         Comment commentById = findCommentById(dto.getId());
         isCorrectAuthor(user.getId(), commentById.getUserId().getId());
@@ -37,7 +37,7 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public void deleteComment(User user, Long id) throws IllegalAccessException {
+    public void deleteComment(User user, Long id)  {
         Comment commentById = findCommentById(id);
         isCorrectAuthor(user.getId(), commentById.getId());
         commentRepository.deleteById(id);

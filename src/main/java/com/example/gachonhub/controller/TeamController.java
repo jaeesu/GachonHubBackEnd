@@ -75,7 +75,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/member")
-    public ResponseEntity<?> removeMember(@CurrentUser UserPrincipal userPrincipal, @RequestBody TeamAddMemberRequestDto dto) throws IllegalAccessException {
+    public ResponseEntity<?> removeMember(@CurrentUser UserPrincipal userPrincipal, @RequestBody TeamAddMemberRequestDto dto)  {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
         teamService.deleteMemmber(user, dto);
         return success("팀 멤버 삭제 완료");

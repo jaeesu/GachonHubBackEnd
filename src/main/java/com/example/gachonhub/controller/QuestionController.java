@@ -48,7 +48,7 @@ public class QuestionController {
 
     @PostMapping
     public ResponseEntity<?> saveQuestionPost(@CurrentUser UserPrincipal userPrincipal,
-                                              @ModelAttribute @Validated({generalGroup.class, saveGroup.class}) QuestionRequestDto questionRequestDto) throws IOException {
+                                              @ModelAttribute @Validated({generalGroup.class, saveGroup.class}) QuestionRequestDto questionRequestDto) {
         //getid 가 null인 경우 에러
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
         questionService.saveQuestionPost(user, questionRequestDto);

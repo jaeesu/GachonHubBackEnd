@@ -45,7 +45,7 @@ public class InquiryController {
 
     @PostMapping
     public ResponseEntity<?> saveInquiry(@CurrentUser UserPrincipal userPrincipal,
-                            @ModelAttribute @Validated({saveGroup.class, generalGroup.class}) InquiryRequestDto dto) throws IOException {
+                            @ModelAttribute @Validated({saveGroup.class, generalGroup.class}) InquiryRequestDto dto) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
         inquiryService.savePost(user, dto);
         return success("문의글 작성 완료");
