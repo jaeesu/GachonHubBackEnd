@@ -30,6 +30,8 @@ public class Team {
 
     private String repos; //description => readme
 
+    private String description;
+
     @Column(name = "team_type")
     @Enumerated(EnumType.STRING)
     private TeamType type;

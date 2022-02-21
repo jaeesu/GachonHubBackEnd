@@ -46,7 +46,7 @@ public class PostQuestion {
     @Builder.Default //애노테이션을 넣지 않으면 0이 들어가지 않는다.
     private Long hit = 0L;
 
-    @OneToMany(mappedBy = "postQuestionId", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "postQuestionId", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<UserFile> userFileList = new ArrayList<>();
 
     @OneToMany(mappedBy = "postQuestionId")

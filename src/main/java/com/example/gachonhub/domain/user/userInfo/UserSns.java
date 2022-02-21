@@ -33,7 +33,10 @@ public class UserSns {
         GITHUB("github.com"),
         GITHUB_BLOG("github.blog"),
         VELOG("velog"),
-        BRUNCH("brunch");
+        BRUNCH("brunch"),
+        FACEBOOK("facebook"),
+        INSTAGRAM("instagram"),
+        TWITTER("twitter");
 
         private String title;
 

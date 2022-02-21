@@ -65,10 +65,10 @@ public class QuestionService {
         return new QuestionResponseDto(postQuestion);
     }
 
-    public Long updateQuestionPost(User user, QuestionRequestDto dto) throws IllegalAccessException, IOException {
+    public Long updateQuestionPost(User user, QuestionRequestDto dto) {
         PostQuestion question = findQuestionPostById(dto.getId());
         isCorrectAuthor(user.getId(), question.getUserId().getId());
-        fileService.deleteUserFileByQuestionId(question.getId());
+//        fileService.deleteUserFileByQuestionId(question.getId());
         return saveQuestionPost(user, dto);
     }
 

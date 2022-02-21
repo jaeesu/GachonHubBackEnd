@@ -40,15 +40,15 @@ public class NoticeService {
         return noticeResponseDto;
     }
 
-    public void deleteNoticePost(User user, Long id) throws IllegalAccessException {
+    public void deleteNoticePost(User user, Long id) {
         PostNotice noticePostById = findNoticePostById(id);
-        isCorrectAuthor(user.getId(), noticePostById.getId());
+        isCorrectAuthor(user.getId(), noticePostById.getUserId().getId());
         noticeRepository.deleteById(id);
     }
 
-    public void updateNoticePost(User user, NoticeRequestDto dto) throws IllegalAccessException {
+    public void updateNoticePost(User user, NoticeRequestDto dto)  {
         PostNotice noticePostById = findNoticePostById(dto.getId());
-        isCorrectAuthor(user.getId(), noticePostById.getId());
+        isCorrectAuthor(user.getId(), noticePostById.getUserId().getId());
         noticeRepository.save(dto.toEntity(user));
     }
 

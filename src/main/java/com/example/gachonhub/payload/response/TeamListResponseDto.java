@@ -32,6 +32,7 @@ public class TeamListResponseDto {
         private String name;
         private Long authorId;
         private String field;
+        private String description;
         private String type;
         private String mainImage;
         private boolean recruiting;
@@ -42,6 +43,7 @@ public class TeamListResponseDto {
             this.name = team.getName();
             this.authorId = team.getAuthorId();
             this.field = team.getField();
+            this.description = team.getDescription();
             this.type = team.getType().name();
             this.mainImage = team.getMainImage();
             this.recruiting = team.isRecruiting();
