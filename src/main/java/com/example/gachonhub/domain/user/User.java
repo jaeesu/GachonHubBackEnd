@@ -5,6 +5,7 @@ import com.example.gachonhub.domain.user.relation.UserToTeam;
 import com.example.gachonhub.domain.user.userInfo.UserRepos;
 import com.example.gachonhub.domain.user.userInfo.UserSns;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.*;
@@ -13,6 +14,7 @@ import java.util.*;
 @Getter
 @Builder
 @Table(name = "user")
+@DynamicUpdate
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {

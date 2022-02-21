@@ -30,5 +30,6 @@ public class PostNotice {
     private String content;
 
     @Column(name = "write_at")
-    private Timestamp writeAt;
+    @Builder.Default
+    private Timestamp writeAt = new Timestamp(System.currentTimeMillis());;
 }

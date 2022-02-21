@@ -26,11 +26,10 @@ public class AmazonS3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadFile(MultipartFile multipartFile) {
-        File file = convertMultiPartFileToFile(multipartFile);
+    public String uploadFile(MultipartFile multipartFile)  {
         String hash = convertFileNameToMd5(multipartFile.getOriginalFilename() + LocalDateTime.now());
 
-        return saveToS3(file, hash);
+        return saveToS3(multipartFile, hash);
     }
 
     public File convertMultiPartFileToFile(MultipartFile multipartFile) {
@@ -43,9 +42,13 @@ public class AmazonS3Service {
         }
     }
 
-    public String saveToS3(File file, String hash) {
-        amazonS3Client.putObject(new PutObjectRequest(bucket, hash, file).withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket, hash).toString();
+    public String saveToS3(MultipartFile file, String hash) {
+        try {
+            amazonS3Client.putObject(new PutObjectRequest(bucket, hash, file.getInputStream(), null).withCannedAcl(CannedAccessControlList.PublicRead));
+            return amazonS3Client.getUrl(bucket, hash).toString();
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     public void deleteFromS3(String savedName) {

@@ -36,6 +36,9 @@ public class TeamRequestDto {
     @NotNull(groups = generalGroup.class, message = "그룹 레포지토리가 누락되었습니다.")
     private String repos;
 
+    @NotNull(groups = generalGroup.class, message = "그룹 설명이 누락되었습니다.")
+    private String description;
+
     @NotNull(groups = generalGroup.class, message = "그룹 형식이 누락되었습니다.")
     private TeamType type;
 
@@ -48,6 +51,7 @@ public class TeamRequestDto {
                 .field(this.field)
                 .people(this.people)
                 .repos(this.repos)
+                .description(this.description)
                 .type(this.type)
                 .mainImage(url)
                 .build();
