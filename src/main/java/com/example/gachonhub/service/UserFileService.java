@@ -18,10 +18,11 @@ public class UserFileService {
     private final UserFileRepository fileRepository;
     private final AmazonS3Service s3Service;
 
-    public void deleteUserFileByQuestionId(Long id) {
-        UserFile userFile = fileRepository.deleteByPostQuestionId_Id(id);
-        s3Service.deleteFromS3(userFile.getImageUrl().substring(userFile.getImageUrl().lastIndexOf("/")));
-    }
+//    public void deleteUserFileByQuestionId(Long id) {
+////        UserFile userFile = fileRepository.deleteByPostQuestionId_Id(id);
+//
+//        s3Service.deleteFromS3(userFile.getImageUrl().substring(userFile.getImageUrl().lastIndexOf("/")));
+//    }
 
     public List<UserFile> uploadMultiPartToUserFile(List<MultipartFile> files) {
         if (files.isEmpty()) return new ArrayList<>();

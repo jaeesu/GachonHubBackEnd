@@ -31,7 +31,8 @@ public class PostInquiry {
     private String imgUrl;
 
     @Column(name = "write_at")
-    private Timestamp writeAt;
+    @Builder.Default
+    private Timestamp writeAt = new Timestamp(System.currentTimeMillis());
 
     @Column(name = "password")
     private Integer password;

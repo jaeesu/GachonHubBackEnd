@@ -68,7 +68,7 @@ public class QuestionService {
     public Long updateQuestionPost(User user, QuestionRequestDto dto) {
         PostQuestion question = findQuestionPostById(dto.getId());
         isCorrectAuthor(user.getId(), question.getUserId().getId());
-        fileService.deleteUserFileByQuestionId(question.getId());
+//        fileService.deleteUserFileByQuestionId(question.getId());
         return saveQuestionPost(user, dto);
     }
 
