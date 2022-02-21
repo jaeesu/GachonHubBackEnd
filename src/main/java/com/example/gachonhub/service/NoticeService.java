@@ -48,7 +48,7 @@ public class NoticeService {
 
     public void updateNoticePost(User user, NoticeRequestDto dto)  {
         PostNotice noticePostById = findNoticePostById(dto.getId());
-        isCorrectAuthor(user.getId(), noticePostById.getId());
+        isCorrectAuthor(user.getId(), noticePostById.getUserId().getId());
         noticeRepository.save(dto.toEntity(user));
     }
 

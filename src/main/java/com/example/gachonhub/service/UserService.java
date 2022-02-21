@@ -15,14 +15,14 @@ public class UserService {
 
     public void updateUserProfile(User user, UserInfoRequestDto dto) {
         dto.toEntity(user, dto);
-        dto.getSns().stream()
-                .map(x -> UserSns.builder()
-                        .id(x.getId())
-                        .userId(user)
-                        .category(x.getCategory())
-                        .url(x.getUrl())
-                        .build()
-                ).forEach(x -> user.getSns().add(x));
+//        dto.getSns().stream()
+//                .map(x -> UserSns.builder()
+//                        .id(x.getId())
+//                        .userId(user)
+//                        .category(x.getCategory())
+//                        .url(x.getUrl())
+//                        .build()
+//                ).forEach(x -> user.getSns().add(x));
         userRepository.save(user);
     }
 

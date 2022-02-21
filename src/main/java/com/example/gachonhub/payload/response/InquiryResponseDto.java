@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class InquiryResponseDto {
 
     private Long id;
-    private String userId;
+    private String user;
     private String title;
     private String content;
     private String img;
@@ -23,7 +23,7 @@ public class InquiryResponseDto {
     public static InquiryResponseDto fromInquiry(PostInquiry inquiry) {
         return InquiryResponseDto.builder()
                 .id(inquiry.getId())
-                .userId(inquiry.getUserId().getNickname())
+                .user(inquiry.getUserId().getNickname())
                 .title(inquiry.getTitle())
                 .content(inquiry.getContent())
                 .img(inquiry.getImgUrl())
