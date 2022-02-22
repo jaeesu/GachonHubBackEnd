@@ -77,7 +77,7 @@ public class GithubRestTemplate {
     public HttpEntity httpEntity(String token) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.ACCEPT, "application/vnd.github.v3+json");
-        httpHeaders.add(HttpHeaders.AUTHORIZATION, "token " + token);
+        httpHeaders.add(HttpHeaders.AUTHORIZATION, "token " + "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");
         return new HttpEntity(httpHeaders);
     }
 

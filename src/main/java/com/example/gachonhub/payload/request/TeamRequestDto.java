@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import javax.validation.constraints.Size;
+import java.util.List;
 
 @Getter
 @Setter
@@ -44,6 +46,11 @@ public class TeamRequestDto {
 
     private MultipartFile image;
 
+    @NotNull(groups = generalGroup.class, message = "그룹 팀원 모집 여부가 누락되었습니다.")
+    private boolean recruiting;
+
+    private String recruitingContent;
+
     public Team toEntity(User user, String url) {
         return Team.builder()
                 .name(this.name)
@@ -55,6 +62,17 @@ public class TeamRequestDto {
                 .type(this.type)
                 .mainImage(url)
                 .build();
+    }
+
+    public void updateTeam(Team team, String url) {
+        team.setName(this.name);
+        team.setField(this.field);
+        team.setPeople(this.people);
+        team.setRepos(this.repos);
+        team.setDescription(this.description);
+        team.setMainImage(url);
+        team.setRecruiting(this.recruiting);
+        team.setRecruitingContent(this.recruitingContent);
     }
     
 }

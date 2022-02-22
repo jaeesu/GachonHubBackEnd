@@ -8,12 +8,9 @@ import com.example.gachonhub.domain.user.relation.UserToTeam;
 import com.example.gachonhub.exception.NotAccessUserException;
 import com.example.gachonhub.exception.ResourceNotFoundException;
 import com.example.gachonhub.payload.request.TeamAddMemberRequestDto;
-import com.example.gachonhub.payload.request.TeamContentRequestDto;
-import com.example.gachonhub.payload.response.TeamListResponseDto;
 import com.example.gachonhub.payload.response.TeamResponseDto;
 import com.example.gachonhub.service.TeamService;
 import com.example.gachonhub.support.WithMockCustomUser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -237,7 +234,10 @@ class TeamControllerTest {
                             .param("field", "정보보안")
                             .param("people", "5")
                             .param("repos", "http://github.com")
+                            .param("description", "정보보안 동아리")
                             .param("type", "CREW")
+                            .param("recruiting", "true")
+                            .param("recruitingContent", "모집합니다. 연락주세요.")
                             .with(SecurityMockMvcRequestPostProcessors.csrf())
             );
 
@@ -245,6 +245,7 @@ class TeamControllerTest {
             perform.andExpect(status().isOk())
                     .andExpect(jsonPath("$.status").value(200))
                     .andExpect(jsonPath("$.data").value("팀 정보 수정 완료"));
+
         }
 
         @Test
@@ -262,7 +263,10 @@ class TeamControllerTest {
                             .param("field", "정보보안")
                             .param("people", "5")
                             .param("repos", "http://github.com")
+                            .param("description", "정보보안 동아리")
                             .param("type", "CREW")
+                            .param("recruiting", "true")
+                            .param("recruitingContent", "모집합니다. 연락주세요.")
                             .with(SecurityMockMvcRequestPostProcessors.csrf())
             );
 
@@ -286,7 +290,10 @@ class TeamControllerTest {
                             .param("field", "정보보안")
                             .param("people", "5")
                             .param("repos", "http://github.com")
+                            .param("description", "정보보안 동아리")
                             .param("type", "CREW")
+                            .param("recruiting", "true")
+                            .param("recruitingContent", "모집합니다. 연락주세요.")
                             .with(SecurityMockMvcRequestPostProcessors.csrf())
             );
 
@@ -310,7 +317,10 @@ class TeamControllerTest {
                             .param("field", "정보보안")
                             .param("people", "5")
                             .param("repos", "http://github.com")
+                            .param("description", "정보보안 동아리")
                             .param("type", "CREW")
+                            .param("recruiting", "true")
+                            .param("recruitingContent", "모집합니다. 연락주세요.")
                             .with(SecurityMockMvcRequestPostProcessors.csrf())
             );
 
@@ -553,82 +563,7 @@ class TeamControllerTest {
         }
 
     }
-    
-    @Nested
-    @DisplayName("팀 모집 글 변경 테스트")
-    @WithMockCustomUser
-    class updateContentTest {
-        @Test
-        @DisplayName("성공")
-        void updateContentSuccessTest() throws Exception {
-            //given
-            given(userRepository.findById(any())).willReturn(Optional.of(getTestUser()));
-            TeamContentRequestDto dto = TeamContentRequestDto.builder()
-                    .teamId(1L)
-                    .content("hello")
-                    .build();
-            //when
-            ResultActions res = mockMvc.perform(
-                    put("/api/groups/post")
-                            .contentType(APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(dto))
-                            .with(SecurityMockMvcRequestPostProcessors.csrf())
-            );
 
-            //then
-            res.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data").value("팀 모집 정보 변경"));
-        }
-
-        @Test
-        @DisplayName("실패 (그룹 주인과 사용자가 다른 경우)")
-        void updateContentFailTest() throws Exception {
-            //given
-            given(userRepository.findById(any())).willReturn(Optional.of(getTestUser()));
-            doThrow(new NotAccessUserException(NOT_CORRECT_USER_ID)).when(teamService).updateRecruitingContent(any(), any());
-            TeamContentRequestDto dto = TeamContentRequestDto.builder()
-                    .teamId(1L)
-                    .content("hello")
-                    .build();
-            //when
-            ResultActions res = mockMvc.perform(
-                    put("/api/groups/post")
-                            .contentType(APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(dto))
-                            .with(SecurityMockMvcRequestPostProcessors.csrf())
-            );
-
-            //then
-            res.andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.status").value(401))
-                    .andExpect(jsonPath("$.message").value(NOT_CORRECT_USER_ID));
-        }
-
-    }
-
-    @Nested
-    @DisplayName("팀원 모집 상태 변경 테스트")
-    @WithMockCustomUser
-    class changeStatusTest {
-
-        @Test
-        @DisplayName("성공")
-        void changeStatusSuccessTest() throws Exception {
-            //given
-            given(userRepository.findById(any())).willReturn(Optional.of(getTestUser()));
-
-            //when
-            ResultActions res = mockMvc.perform(
-                    get("/api/groups/status/1")
-                            .with(SecurityMockMvcRequestPostProcessors.csrf())
-            );
-
-            //then
-            res.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data").value("팀 모집 상태 변경"));
-        }
-
-    }
 
     User getTestUser() {
         User test = User.builder()

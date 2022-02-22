@@ -7,7 +7,6 @@ import com.example.gachonhub.payload.ValidationGroups.generalGroup;
 import com.example.gachonhub.payload.ValidationGroups.saveGroup;
 import com.example.gachonhub.payload.ValidationGroups.updateGroup;
 import com.example.gachonhub.payload.request.TeamAddMemberRequestDto;
-import com.example.gachonhub.payload.request.TeamContentRequestDto;
 import com.example.gachonhub.payload.request.TeamRequestDto;
 import com.example.gachonhub.payload.response.TeamListResponseDto;
 import com.example.gachonhub.payload.response.TeamResponseDto;
@@ -81,17 +80,4 @@ public class TeamController {
         return success("팀 멤버 삭제 완료");
     }
 
-    @PutMapping("/post")
-    public ResponseEntity<?> updateRecruitingContent(@CurrentUser UserPrincipal userPrincipal, @RequestBody @Validated TeamContentRequestDto dto) {
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
-        teamService.updateRecruitingContent(user, dto);
-        return success("팀 모집 정보 변경");
-    }
-
-    @GetMapping("/status/{teamId}")
-    public ResponseEntity<?> changeRecruitingStatus(@CurrentUser UserPrincipal userPrincipal, @PathVariable("teamId") Long id) {
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
-        teamService.changeRecruitingStatus(user, id);
-        return success("팀 모집 상태 변경");
-    }
 }
