@@ -59,9 +59,9 @@ public class InquiryService {
         savePost(user, dto);
     }
 
-    public PostInquiry findInquiryPostById(Long id) {
-        return inquiryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_CONTENT_ID));
-    }
+            public PostInquiry findInquiryPostById(Long id) {
+                return inquiryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_CONTENT_ID));
+            }
 
     public void isCorrectAuthor(Long userId, Long postAuthorId) {
         if (!userId.equals(postAuthorId)) {

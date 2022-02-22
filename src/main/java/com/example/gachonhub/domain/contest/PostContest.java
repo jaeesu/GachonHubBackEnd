@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Builder
+@Setter
 @Table(name = "post_contest")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,18 +34,15 @@ public class PostContest {
     @JoinColumn(name = "category_id")
     private SubCategory categoryId;
 
-    private Integer people;
-
-    private Date start;
-
-    private Date end;
-
     private Integer hit;
 
     @Builder.Default
     private Timestamp writeAt = new Timestamp(System.currentTimeMillis());
 
-    @Lob
-    private byte[] image;
+    private String image;
+
+    public void updateHit() {
+        this.hit++;
+    }
 
 }
