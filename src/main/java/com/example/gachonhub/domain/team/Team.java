@@ -20,29 +20,37 @@ public class Team {
     @Column(name = "team_id")
     private Long id;
 
+    @Setter
     private String name;
 
     private Long authorId;
 
+    @Setter
     private String field;
 
+    @Setter
     private Integer people;
 
+    @Setter
     private String repos; //description => readme
 
+    @Setter
     private String description;
 
     @Column(name = "team_type")
     @Enumerated(EnumType.STRING)
     private TeamType type;
 
+    @Setter
     private String mainImage;
 
     @Column(name = "commit_count")
     private Long commitCount; //d 0
 
+    @Setter
     private boolean recruiting; //d 0
 
+    @Setter
     private String recruitingContent;
 
     @Builder.Default
@@ -53,11 +61,4 @@ public class Team {
         STUDY, CREW
     }
 
-    public void updateContent(String content) {
-        this.recruitingContent = content;
-    }
-
-    public void changeRecruiting() {
-        this.recruiting = (this.recruiting) ? false : true;
-    }
 }

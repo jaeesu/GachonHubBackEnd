@@ -458,7 +458,7 @@ class InquiryControllerTest {
             String url = "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg";
             InquiryResponseDto dto = InquiryResponseDto.builder()
                     .id(1L)
-                    .userId("test")
+                    .user("test")
                     .title("title")
                     .content("content")
                     .img(url)
@@ -477,7 +477,7 @@ class InquiryControllerTest {
             //then
             perform.andExpect(status().isOk())
                     .andExpect(jsonPath("$.data.id").value(1))
-                    .andExpect(jsonPath("$.data.userId").value(dto.getUserId()))
+                    .andExpect(jsonPath("$.data.userId").value(dto.getUser()))
                     .andExpect(jsonPath("$.data.title").value(dto.getTitle()))
                     .andExpect(jsonPath("$.data.content").value(dto.getContent()))
                     .andExpect(jsonPath("$.data.img").value(url))
