@@ -9,7 +9,6 @@ import com.example.gachonhub.domain.user.relation.UserToTeam;
 import com.example.gachonhub.exception.NotAccessUserException;
 import com.example.gachonhub.exception.ResourceNotFoundException;
 import com.example.gachonhub.payload.request.TeamAddMemberRequestDto;
-import com.example.gachonhub.payload.request.TeamContentRequestDto;
 import com.example.gachonhub.payload.request.TeamRequestDto;
 import com.example.gachonhub.payload.response.TeamListResponseDto;
 import com.example.gachonhub.payload.response.TeamResponseDto;
@@ -58,7 +57,10 @@ public class TeamService {
     public void updateTeamInfo(User user, TeamRequestDto dto) throws IllegalAccessException {
         Team team = findTeamById(dto.getTeamId());
         isCorrectAuthor(user.getId(), team.getAuthorId());
-        saveTeam(user, dto);
+
+        String url = (dto.getImage() != null) ? s3Service.uploadFile(dto.getImage()) : null;
+        dto.updateTeam(team, url);
+        teamRepository.save(team);
     }
 
     @Transactional
@@ -100,18 +102,6 @@ public class TeamService {
                 .orElseThrow(() -> new NoSuchElementException());
         team.getUsers().remove(relation);
         user.getGroups().remove(relation);
-    }
-
-    public void updateRecruitingContent(User user, TeamContentRequestDto dto) {
-        Team team = findTeamById(dto.getTeamId());
-        isCorrectAuthor(user.getId(), team.getAuthorId());
-        team.updateContent(dto.getContent());
-    }
-
-    public void changeRecruitingStatus(User user, Long id) {
-        Team team = findTeamById(id);
-        isCorrectAuthor(user.getId(), team.getAuthorId());
-        team.changeRecruiting();
     }
 
     public Team findTeamById(Long id) {
