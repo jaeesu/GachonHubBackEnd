@@ -22,6 +22,7 @@ public class TeamResponseDto {
     private String repos;
     private String type;
     private String mainImage;
+    private String description;
     private Long commitCount;
     private boolean recruiting;
     private List<TeamMemberDto> users;
@@ -37,6 +38,7 @@ public class TeamResponseDto {
                 .repos(team.getRepos())
                 .type(team.getType().name())
                 .mainImage(team.getMainImage())
+                .description(team.getDescription())
                 .commitCount(team.getCommitCount())
                 .recruiting(team.isRecruiting())
                 .users(team.getUsers().stream()

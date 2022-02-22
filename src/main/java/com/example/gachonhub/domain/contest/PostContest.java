@@ -44,7 +44,6 @@ public class PostContest {
     @Builder.Default
     private Timestamp writeAt = new Timestamp(System.currentTimeMillis());
 
-    @Lob
-    private byte[] image;
+    private String image;
 
 }
