@@ -18,6 +18,8 @@ public class CommitInfo {
     @Column(name = "commitinfo_id")
     private String sha;
 
+    private String message;
+
     private LocalDateTime date;
 
     @ManyToOne(fetch = FetchType.LAZY)

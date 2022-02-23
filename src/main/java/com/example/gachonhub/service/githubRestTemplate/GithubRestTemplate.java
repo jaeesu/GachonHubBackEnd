@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -23,8 +24,9 @@ import java.util.stream.Collectors;
 //@RequiredArgsConstructor
 public class GithubRestTemplate {
 
+
     private final AppProperties appProperties;
-    private final String baseuri;
+    private String baseuri;
 
     public GithubRestTemplate(AppProperties appProperties) {
         this.appProperties = appProperties;
@@ -32,11 +34,14 @@ public class GithubRestTemplate {
     }
 
     //all page? or 1?
+    @Transactional
     public List<GithubRepositoryDto> getUserGithubRepositories(User user) {
+        log.warn("repository get");
         //개인 repo(publi, private)의 main branch => ext : personal, orgs의 all branch
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<List<GithubRepositoryDto>> exchange = restTemplate.exchange( baseuri + "/user/repos", HttpMethod.GET, httpEntity(user.getGithubToken()), new ParameterizedTypeReference<List<GithubRepositoryDto>>() {
         });
+
 
         return exchange.getBody();
     }
@@ -77,7 +82,7 @@ public class GithubRestTemplate {
     public HttpEntity httpEntity(String token) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.ACCEPT, "application/vnd.github.v3+json");
-        httpHeaders.add(HttpHeaders.AUTHORIZATION, "token " + "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");
+        httpHeaders.add(HttpHeaders.AUTHORIZATION, "token " + token);
         return new HttpEntity(httpHeaders);
     }
 

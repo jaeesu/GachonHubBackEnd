@@ -4,6 +4,7 @@ import com.example.gachonhub.domain.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -34,7 +35,7 @@ public class UserRepos {
 
     private boolean main;
 
-    private String updatedAt;
+    private Timestamp updatedAt;
 
     public void removeMain() {
         this.main = false;

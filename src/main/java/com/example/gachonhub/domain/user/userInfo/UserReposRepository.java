@@ -8,8 +8,4 @@ import java.util.List;
 
 public interface UserReposRepository extends JpaRepository<UserRepos, Long>, UserReposCustomRepository {
 
-    List<UserRepos> findAllByUser_IdAndMainIsTrue(Long id);
-
-    @Query("select r from UserRepos r where r.id in :list")
-    List<UserRepos> findAllByIds(@Param("list") List<Integer> ids);
 }

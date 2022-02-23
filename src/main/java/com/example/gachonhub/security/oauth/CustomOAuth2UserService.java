@@ -1,13 +1,16 @@
 package com.example.gachonhub.security.oauth;
 
+import com.example.gachonhub.domain.commitInfo.dto.GithubRepositoryDto;
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.domain.user.User.Role;
 import com.example.gachonhub.domain.user.UserRepository;
+import com.example.gachonhub.domain.user.userInfo.UserRepos;
 import com.example.gachonhub.domain.user.userInfo.UserSns;
 import com.example.gachonhub.domain.user.userInfo.UserSns.SnsCategory;
 import com.example.gachonhub.exception.OAuth2AuthenticationProcessingException;
 import com.example.gachonhub.security.AppProperties;
 import com.example.gachonhub.security.UserPrincipal;
+import com.example.gachonhub.service.githubRestTemplate.GithubRestTemplate;
 import com.example.gachonhub.util.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,15 +21,19 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
+    private final GithubRestTemplate githubRestTemplate;
     private final UserRepository userRepository;
     private final AppProperties appProperties;
 
@@ -64,7 +71,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                         "github" + " account. Please use your " + "github" +
                         " account to login.");
             }
-            user = updateExistingUser(user, oAuth2UserInfo);
+            user = updateExistingUser(user, oAuth2UserInfo, oAuth2UserRequest);
         } else {
             user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
         }
@@ -93,13 +100,26 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (userSns != null) {
             user.getSns().add(userSns);
         }
+
+        List<GithubRepositoryDto> githubRepositories = githubRestTemplate.getUserGithubRepositories(user);
+        githubRepositories.stream()
+                .map(x -> x.toEntity(user))
+                .forEach(x -> user.getRepos().add(x));
+
         userRepository.save(user);
 
         return user;
     }
 
-    private User updateExistingUser(User existingUser, GithubOAuth2UserInfo oAuth2UserInfo) {
+
+    @Transactional
+    public User updateExistingUser(User existingUser, GithubOAuth2UserInfo oAuth2UserInfo, OAuth2UserRequest oAuth2UserRequest) {
         log.info("Oauth2 => custom user service : updateExistingUser");
+
+        existingUser.setAvatarUrl(oAuth2UserInfo.getImageUrl());
+        existingUser.setCompany(oAuth2UserInfo.getCompany());
+        existingUser.setDescription(oAuth2UserInfo.getBio());
+        existingUser.setGithubToken(oAuth2UserRequest.getAccessToken().getTokenValue());
 
         return userRepository.save(existingUser);
     }

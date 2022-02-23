@@ -34,4 +34,13 @@ public class CommitInfoDto {
             private LocalDateTime date;
         }
     }
+
+    public CommitInfo toEntity(User user) {
+        return CommitInfo.builder()
+                .sha(this.sha)
+                .date(this.commit.author.date)
+                .userId(user)
+                .build();
+
+    }
 }
