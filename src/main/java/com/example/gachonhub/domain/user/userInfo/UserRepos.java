@@ -18,13 +18,15 @@ public class UserRepos {
     @Column(name = "user_repository_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     private String url;
 
-    private String title;
+    private String name;
+
+    private String fullName;
 
     private String description;
 
@@ -32,7 +34,7 @@ public class UserRepos {
 
     private boolean main;
 
-    private LocalDateTime updatedAt;
+    private String updatedAt;
 
     public void removeMain() {
         this.main = false;

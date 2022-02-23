@@ -96,6 +96,8 @@ class TeamControllerTest {
                             .param("people", "5")
                             .param("repos", "http://github.com")
                             .param("type", "CREW")
+                            .param("recruiting", "false")
+                            .param("description", "모집 중")
                             .with(SecurityMockMvcRequestPostProcessors.csrf())
             );
 
@@ -120,6 +122,9 @@ class TeamControllerTest {
                             .param("people", "5")
                             .param("repos", "http://github.com")
                             .param("type", "CREW")
+                            .param("recruiting", "false")
+                            .param("description", "모집 중")
+                            .param("description", "모집 중")
                             .with(SecurityMockMvcRequestPostProcessors.csrf())
             );
 
@@ -143,6 +148,8 @@ class TeamControllerTest {
                             .param("name", "테스트팀")
                             .param("field", "정보보안")
                             .param("people", "5")
+                            .param("recruiting", "false")
+                            .param("description", "모집 중")
                             .param("repos", "http://github.com")
                             .param("type", "CREW")
                             .with(SecurityMockMvcRequestPostProcessors.csrf())
@@ -168,6 +175,8 @@ class TeamControllerTest {
                             .param("people", "5")
                             .param("repos", "http://github.com")
                             .param("type", "CREW")
+                            .param("recruiting", "false")
+                            .param("description", "모집 중")
                             .with(SecurityMockMvcRequestPostProcessors.csrf())
             );
 

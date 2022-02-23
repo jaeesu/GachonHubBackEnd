@@ -27,10 +27,13 @@ public class User {
 
     private String name; //login
 
+    @Setter
     private String avatarUrl; //avatar_url
 
+    @Setter
     private String company;
 
+    @Setter
     private String description;
 
     @Setter
@@ -44,6 +47,7 @@ public class User {
 
     private String createdAt;
 
+    @Setter
     private String githubToken;
 
     public enum Role {
