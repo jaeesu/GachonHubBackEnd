@@ -55,11 +55,13 @@ public class UserResponseDto {
         private Long id;
         private String category;
         private String url;
+        private boolean auto;
 
         public UserSnsDto(UserSns sns) {
             this.id = sns.getId();
             this.category = sns.getCategory();
             this.url = sns.getUrl();
+            this.auto = sns.isAuto();
         }
     }
 

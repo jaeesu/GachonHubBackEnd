@@ -134,6 +134,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                             .category(n.name())
                             .userId(user)
                             .url(oAuth2UserInfo.getBlog())
+                            .auto(true)
                             .build();
                     return sns;
                 }

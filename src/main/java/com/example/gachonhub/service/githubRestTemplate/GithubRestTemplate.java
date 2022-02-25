@@ -13,9 +13,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,23 +51,29 @@ public class GithubRestTemplate {
     public List<CommitInfoDto> getRepositoryCommit(User user, String repos_full_name) {
         //getcommits
 
-        RestTemplate restTemplate = new RestTemplate();
-        String[] repos = repos_full_name.split("/");
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            String[] repos = repos_full_name.split("/");
 
-        String uri = UriComponentsBuilder.fromUriString("/repos")
-                .path("/{owner}")
-                .path("/{repos}")
-                .path("/commits")
-                .buildAndExpand(repos[0], repos[1])
-                .toUriString();
+            String uri = UriComponentsBuilder.fromUriString("/repos")
+                    .path("/{owner}")
+                    .path("/{repos}")
+                    .path("/commits")
+                    .buildAndExpand(repos[0], repos[1])
+                    .toUriString();
 
-        ResponseEntity<List<CommitInfoDto>> exchange1 = restTemplate.exchange(baseuri + uri, HttpMethod.GET, httpEntity(user.getGithubToken()), new ParameterizedTypeReference<List<CommitInfoDto>>() {
-        });
-        List<CommitInfoDto> commitInfoList = exchange1.getBody();
-        List<CommitInfoDto> authorCommitInfoList = commitInfoList.stream()
-                .filter(x -> x.getCommit().getAuthor().getName().equals(user.getNickname()))
-                .collect(Collectors.toList());
-        return authorCommitInfoList;
+            ResponseEntity<List<CommitInfoDto>> exchange1 = restTemplate.exchange(baseuri + uri, HttpMethod.GET, httpEntity(user.getGithubToken()), new ParameterizedTypeReference<List<CommitInfoDto>>() {
+            });
+            List<CommitInfoDto> commitInfoList = exchange1.getBody();
+            List<CommitInfoDto> authorCommitInfoList = commitInfoList.stream()
+                    .filter(x -> x.getCommit().getAuthor().getName().equals(user.getNickname()))
+                    .collect(Collectors.toList());
+            return authorCommitInfoList;
+        } catch (HttpClientErrorException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+
     }
 
     public void getOrgs() {

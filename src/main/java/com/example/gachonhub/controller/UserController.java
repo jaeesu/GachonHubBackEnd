@@ -42,14 +42,8 @@ public class UserController {
     public ResponseEntity<?> updateUserSns(@CurrentUser UserPrincipal userPrincipal, @RequestBody @Valid UserInfoRequestDto dto) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
         userService.updateUserProfile(user, dto);
+        reposService.updateMainRepository(user, dto.getRepos());
         return success("사용자 정보 수정 완료");
-    }
-
-    @PutMapping("/repos")
-    public ResponseEntity<?> updateUserRepos(@CurrentUser UserPrincipal userPrincipal, @RequestBody @Validated ReposRequestDto repos) {
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
-        reposService.updateMainRepository(user, repos);
-        return success("사용자 대표 레포지토리 수정 완료");
     }
 
 }

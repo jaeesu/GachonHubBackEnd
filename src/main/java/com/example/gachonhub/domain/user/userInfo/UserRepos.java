@@ -35,6 +35,8 @@ public class UserRepos {
 
     private boolean main;
 
+    private String visibility;
+
     private Timestamp updatedAt;
 
     public void removeMain() {

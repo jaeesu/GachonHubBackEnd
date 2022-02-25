@@ -31,6 +31,7 @@ public class GithubRepositoryDto {
                 .fullName(this.full_name)
                 .description(this.description)
                 .main(false)
+                .visibility(this.visibility)
                 .updatedAt(this.updated_at)
                 .build();
     }

@@ -27,6 +27,8 @@ public class UserSns {
 
     private String url;
 
+    private boolean auto;
+
     @Getter
     public enum SnsCategory {
         TISTORY("tistory"),

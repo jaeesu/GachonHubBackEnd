@@ -14,9 +14,9 @@ public class UserReposService {
 
     private final UserReposRepository reposRepository;
 
-    public void updateMainRepository(User user, ReposRequestDto repos) {
+    public void updateMainRepository(User user, List<Long> repos) {
         user.getRepos()
                 .forEach(x -> x.removeMain());
-        reposRepository.updateMainRepository(user, repos.getRepos());
+        if (repos != null && !repos.isEmpty()) reposRepository.updateMainRepository(user, repos);
     }
 }
