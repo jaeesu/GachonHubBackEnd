@@ -1,6 +1,7 @@
 package com.example.gachonhub.domain.user;
 
 
+import com.example.gachonhub.domain.commitInfo.CommitInfo;
 import com.example.gachonhub.domain.user.relation.UserToTeam;
 import com.example.gachonhub.domain.user.userInfo.UserRepos;
 import com.example.gachonhub.domain.user.userInfo.UserSns;
@@ -27,10 +28,13 @@ public class User {
 
     private String name; //login
 
+    @Setter
     private String avatarUrl; //avatar_url
 
+    @Setter
     private String company;
 
+    @Setter
     private String description;
 
     @Setter
@@ -44,7 +48,11 @@ public class User {
 
     private String createdAt;
 
+    @Setter
     private String githubToken;
+
+    @Setter
+    private Long commitCount;
 
     public enum Role {
         ADMIN, USER,
@@ -61,4 +69,5 @@ public class User {
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Set<UserToTeam> groups = new HashSet<>();
+
 }

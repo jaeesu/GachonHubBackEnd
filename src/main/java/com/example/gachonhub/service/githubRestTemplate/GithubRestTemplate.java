@@ -12,9 +12,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,8 +26,9 @@ import java.util.stream.Collectors;
 //@RequiredArgsConstructor
 public class GithubRestTemplate {
 
+
     private final AppProperties appProperties;
-    private final String baseuri;
+    private String baseuri;
 
     public GithubRestTemplate(AppProperties appProperties) {
         this.appProperties = appProperties;
@@ -32,11 +36,14 @@ public class GithubRestTemplate {
     }
 
     //all page? or 1?
+    @Transactional
     public List<GithubRepositoryDto> getUserGithubRepositories(User user) {
+        log.warn("repository get");
         //개인 repo(publi, private)의 main branch => ext : personal, orgs의 all branch
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<List<GithubRepositoryDto>> exchange = restTemplate.exchange( baseuri + "/user/repos", HttpMethod.GET, httpEntity(user.getGithubToken()), new ParameterizedTypeReference<List<GithubRepositoryDto>>() {
         });
+
 
         return exchange.getBody();
     }
@@ -44,23 +51,29 @@ public class GithubRestTemplate {
     public List<CommitInfoDto> getRepositoryCommit(User user, String repos_full_name) {
         //getcommits
 
-        RestTemplate restTemplate = new RestTemplate();
-        String[] repos = repos_full_name.split("/");
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            String[] repos = repos_full_name.split("/");
 
-        String uri = UriComponentsBuilder.fromUriString("/repos")
-                .path("/{owner}")
-                .path("/{repos}")
-                .path("/commits")
-                .buildAndExpand(repos[0], repos[1])
-                .toUriString();
+            String uri = UriComponentsBuilder.fromUriString("/repos")
+                    .path("/{owner}")
+                    .path("/{repos}")
+                    .path("/commits")
+                    .buildAndExpand(repos[0], repos[1])
+                    .toUriString();
 
-        ResponseEntity<List<CommitInfoDto>> exchange1 = restTemplate.exchange(baseuri + uri, HttpMethod.GET, httpEntity(user.getGithubToken()), new ParameterizedTypeReference<List<CommitInfoDto>>() {
-        });
-        List<CommitInfoDto> commitInfoList = exchange1.getBody();
-        List<CommitInfoDto> authorCommitInfoList = commitInfoList.stream()
-                .filter(x -> x.getCommit().getAuthor().getName().equals(user.getNickname()))
-                .collect(Collectors.toList());
-        return authorCommitInfoList;
+            ResponseEntity<List<CommitInfoDto>> exchange1 = restTemplate.exchange(baseuri + uri, HttpMethod.GET, httpEntity(user.getGithubToken()), new ParameterizedTypeReference<List<CommitInfoDto>>() {
+            });
+            List<CommitInfoDto> commitInfoList = exchange1.getBody();
+            List<CommitInfoDto> authorCommitInfoList = commitInfoList.stream()
+                    .filter(x -> x.getCommit().getAuthor().getName().equals(user.getNickname()))
+                    .collect(Collectors.toList());
+            return authorCommitInfoList;
+        } catch (HttpClientErrorException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+
     }
 
     public void getOrgs() {
@@ -77,7 +90,7 @@ public class GithubRestTemplate {
     public HttpEntity httpEntity(String token) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.ACCEPT, "application/vnd.github.v3+json");
-        httpHeaders.add(HttpHeaders.AUTHORIZATION, "token " + "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");
+        httpHeaders.add(HttpHeaders.AUTHORIZATION, "token " + token);
         return new HttpEntity(httpHeaders);
     }
 

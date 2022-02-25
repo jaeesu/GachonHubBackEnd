@@ -20,7 +20,7 @@ import javax.persistence.EntityManager;
 import static com.example.gachonhub.domain.user.User.Role.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles("prod")
+@ActiveProfiles("local")
 @DataJpaTest
 @Import(TestConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

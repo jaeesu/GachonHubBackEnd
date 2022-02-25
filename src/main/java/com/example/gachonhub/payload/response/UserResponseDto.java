@@ -55,11 +55,13 @@ public class UserResponseDto {
         private Long id;
         private String category;
         private String url;
+        private boolean auto;
 
         public UserSnsDto(UserSns sns) {
             this.id = sns.getId();
             this.category = sns.getCategory();
             this.url = sns.getUrl();
+            this.auto = sns.isAuto();
         }
     }
 
@@ -67,18 +69,22 @@ public class UserResponseDto {
     public static class UserReposDto {
         private Long id;
         private String url;
-        private String title;
+        private String name;
+        private String fullName;
         private String description;
         private String lang;
-        private LocalDateTime updatedAt;
+        private boolean main;
+        private String updatedAt;
 
         public UserReposDto(UserRepos repos) {
             this.id = repos.getId();
             this.url = repos.getUrl();
-            this.title = repos.getTitle();
+            this.name = repos.getName();
+            this.fullName = repos.getFullName();
             this.description = repos.getDescription();
+            this.main = repos.isMain();
             this.lang = repos.getLang();
-            this.updatedAt = repos.getUpdatedAt();
+            this.updatedAt = repos.getUpdatedAt().toString();
         }
     }
 
@@ -87,11 +93,13 @@ public class UserResponseDto {
         private Long id;
         private String name;
         private String mainImage;
+        private String type;
 
         public UserGroupDto(UserToTeam team) {
             this.id = team.getTeam().getId();
             this.name = team.getTeam().getName();
             this.mainImage = team.getTeam().getMainImage();
+            this.type = team.getTeam().getType().name();
         }
     }
 

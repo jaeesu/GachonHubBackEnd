@@ -477,7 +477,7 @@ class InquiryControllerTest {
             //then
             perform.andExpect(status().isOk())
                     .andExpect(jsonPath("$.data.id").value(1))
-                    .andExpect(jsonPath("$.data.userId").value(dto.getUser()))
+                    .andExpect(jsonPath("$.data.user").value(dto.getUser()))
                     .andExpect(jsonPath("$.data.title").value(dto.getTitle()))
                     .andExpect(jsonPath("$.data.content").value(dto.getContent()))
                     .andExpect(jsonPath("$.data.img").value(url))

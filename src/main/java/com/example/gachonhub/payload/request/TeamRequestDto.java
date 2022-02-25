@@ -47,7 +47,7 @@ public class TeamRequestDto {
     private MultipartFile image;
 
     @NotNull(groups = generalGroup.class, message = "그룹 팀원 모집 여부가 누락되었습니다.")
-    private boolean recruiting;
+    private Boolean recruiting;
 
     private String recruitingContent;
 

@@ -19,13 +19,15 @@ public class UserSns {
     @Column(name = "user_sns_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User userId; //user_id_user_id
 
     private String category;
 
     private String url;
+
+    private boolean auto;
 
     @Getter
     public enum SnsCategory {

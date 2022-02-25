@@ -15,8 +15,9 @@ import java.time.LocalDateTime;
 public class CommitInfo {
 
     @Id
-    @Column(name = "commitinfo_id")
     private String sha;
+
+    private String message;
 
     private LocalDateTime date;
 

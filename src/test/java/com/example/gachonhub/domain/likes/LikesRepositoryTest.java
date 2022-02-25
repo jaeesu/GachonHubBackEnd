@@ -23,7 +23,7 @@ import java.time.LocalDate;
 import static com.example.gachonhub.domain.user.User.Role.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles("prod")
+@ActiveProfiles("local")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DataJpaTest
 @Import(TestConfig.class)
@@ -49,9 +49,6 @@ class LikesRepositoryTest {
                 .user(testUser1)
                 .title("title")
                 .content("content")
-                .start(Date.valueOf(LocalDate.now()))
-                .end(Date.valueOf(LocalDate.now()))
-                .people(5)
                 .categoryId(second)
                 .build();
         entityManager.persist(contest);

@@ -24,7 +24,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ActiveProfiles("prod")
+@ActiveProfiles("local")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) //무슨 차이...?
 @DataJpaTest
 @Import(TestConfig.class)

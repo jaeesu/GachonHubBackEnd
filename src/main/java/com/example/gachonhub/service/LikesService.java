@@ -2,7 +2,7 @@ package com.example.gachonhub.service;
 
 import com.example.gachonhub.domain.comment.Comment;
 import com.example.gachonhub.domain.comment.CommentRepository;
-import com.example.gachonhub.domain.contest.PostContentRepository;
+import com.example.gachonhub.domain.contest.PostContestRepository;
 import com.example.gachonhub.domain.contest.PostContest;
 import com.example.gachonhub.domain.likes.Likes;
 import com.example.gachonhub.domain.likes.LikesRepository;
@@ -24,7 +24,7 @@ public class LikesService {
     private final LikesRepository likesRepository;
     private final CommentRepository commentRepository;
     private final QuestionRepository questionRepository;
-    private final PostContentRepository contentRepository;
+    private final PostContestRepository contentRepository;
 
     public void saveLikes(User user, LikesRequestDto dto) {
         Likes likes = Likes.builder().build();

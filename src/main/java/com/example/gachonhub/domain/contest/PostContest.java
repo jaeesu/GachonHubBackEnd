@@ -25,25 +25,22 @@ public class PostContest {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Setter
     private String title;
-
+    @Setter
     private String content;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "category_id")
     private SubCategory categoryId;
-
-    private Integer people;
-
-    private Date start;
-
-    private Date end;
 
     private Integer hit;
 
     @Builder.Default
     private Timestamp writeAt = new Timestamp(System.currentTimeMillis());
 
+    @Setter
     private String image;
 
 }
