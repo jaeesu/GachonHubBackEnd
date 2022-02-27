@@ -66,17 +66,17 @@ public class TeamController {
         return success("팀 삭제 성공");
     }
 
-    @PostMapping("/member")
-    public ResponseEntity<?> addMember(@CurrentUser UserPrincipal userPrincipal, @RequestBody @Validated TeamAddMemberRequestDto dto) throws IllegalAccessException {
+    @GetMapping("/member")
+    public ResponseEntity<?> addMember(@CurrentUser UserPrincipal userPrincipal, @RequestParam("user") String userNickName, @RequestParam("team") Long teamId) throws IllegalAccessException {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
-        teamService.addMember(user, dto);
+        teamService.addMember(user, userNickName, teamId);
         return success("팀 멤버 추가 완료");
     }
 
     @DeleteMapping("/member")
-    public ResponseEntity<?> removeMember(@CurrentUser UserPrincipal userPrincipal, @RequestBody TeamAddMemberRequestDto dto)  {
+    public ResponseEntity<?> removeMember(@CurrentUser UserPrincipal userPrincipal, @RequestParam("user") String userNickName, @RequestParam("team") Long teamId)  {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
-        teamService.deleteMemmber(user, dto);
+        teamService.deleteMemmber(user, userNickName, teamId);
         return success("팀 멤버 삭제 완료");
     }
 

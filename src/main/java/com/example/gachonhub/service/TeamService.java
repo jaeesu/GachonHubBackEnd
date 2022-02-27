@@ -50,7 +50,7 @@ public class TeamService {
         String url = (dto.getImage() != null) ? s3Service.uploadFile(dto.getImage()) : null;
         Team team = dto.toEntity(user, url);
         teamRepository.save(team);
-        addMember(user, new TeamAddMemberRequestDto(user.getId(), team.getId()));
+        addMember(user, user.getNickname(), team.getId());
     }
 
     @Transactional
@@ -67,20 +67,14 @@ public class TeamService {
     public void deleteTeam(User user, Long id) {
         Team team = findTeamById(id);
         isCorrectAuthor(user.getId(), team.getAuthorId());
-
-        UserToTeam userToTeam = team.getUsers().stream()
-                .filter(x -> x.getUser().getId().equals(user.getId()))
-                .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_CONTENT_ID));
-        team.getUsers().remove(userToTeam);
-        user.getGroups().remove(userToTeam);
+        teamRepository.deleteById(id);
     }
 
     @Transactional
-    public void addMember(User user, TeamAddMemberRequestDto dto) {
-        Team team = findTeamById(dto.getTeamId());
+    public void addMember(User user, String userNickName, Long teamId) {
+        Team team = findTeamById(teamId);
         isCorrectAuthor(user.getId(), team.getAuthorId());
-        User newMember = findUserById(dto.getMemberId());
+        User newMember = userRepository.findByNickname(userNickName).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_NICKNAME));
 
         UserToTeam relation = UserToTeam.builder()
                 .team(team)
@@ -92,12 +86,15 @@ public class TeamService {
     }
 
     @Transactional
-    public void deleteMemmber(User user, TeamAddMemberRequestDto dto)  {
-        Team team = findTeamById(dto.getTeamId());
+    public void deleteMemmber(User user, String userNickName, Long teamId)  {
+        Team team = findTeamById(teamId);
         isCorrectAuthor(user.getId(), team.getAuthorId());
+        for (UserToTeam n : team.getUsers()){
+            log.warn(n.getTeam().getId() + " " + n.getUser().getId());
+        }
 
         UserToTeam relation = team.getUsers().stream()
-                .filter(x -> x.getUser() == user)
+                .filter(x -> x.getUser().getNickname().equals(userNickName))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException());
         team.getUsers().remove(relation);

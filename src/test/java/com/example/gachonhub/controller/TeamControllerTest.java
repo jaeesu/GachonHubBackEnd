@@ -36,7 +36,7 @@ import java.util.Optional;
 
 import static com.example.gachonhub.domain.user.User.Role.USER;
 import static com.example.gachonhub.util.ErrorUtil.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -408,7 +408,7 @@ class TeamControllerTest {
             //given
             given(userRepository.findById(any())).willReturn(Optional.of(getTestUser()));
             TeamAddMemberRequestDto dto = TeamAddMemberRequestDto.builder()
-                    .memberId(12345L)
+                    .memberNickName("test")
                     .teamId(1L)
                     .build();
             //when
@@ -429,10 +429,11 @@ class TeamControllerTest {
         @DisplayName("실패 (그룹 주인과 다른 사용자)")
         void addMemberFailTest1() throws Exception {
             //given
-            given(userRepository.findById(any())).willReturn(Optional.of(getTestUser()));
-            doThrow(new NotAccessUserException(NOT_CORRECT_USER_ID)).when(teamService).addMember(any(), any());
+            User testUser = getTestUser();
+            given(userRepository.findById(any())).willReturn(Optional.of(testUser));
+            doThrow(new NotAccessUserException(NOT_CORRECT_USER_ID)).when(teamService).addMember(testUser, any(), anyLong());
             TeamAddMemberRequestDto dto = TeamAddMemberRequestDto.builder()
-                    .memberId(12345L)
+                    .memberNickName("test")
                     .teamId(1L)
                     .build();
             //when
@@ -454,10 +455,11 @@ class TeamControllerTest {
         @DisplayName("실패 (존재 하지 않는 그룹 아이디)")
         void addMemberFailTest2() throws Exception {
             //given
-            given(userRepository.findById(any())).willReturn(Optional.of(getTestUser()));
-            doThrow(new ResourceNotFoundException(NOT_FOUND_GROUP_ID)).when(teamService).addMember(any(), any());
+            User testUser = getTestUser();
+            given(userRepository.findById(any())).willReturn(Optional.of(testUser));
+            doThrow(new ResourceNotFoundException(NOT_FOUND_GROUP_ID)).when(teamService).addMember(testUser, any(), any());
             TeamAddMemberRequestDto dto = TeamAddMemberRequestDto.builder()
-                    .memberId(12345L)
+                    .memberNickName("test")
                     .teamId(1L)
                     .build();
             //when
@@ -478,10 +480,11 @@ class TeamControllerTest {
         @DisplayName("실패 (그룹에 존재 하지 않는 사용자 아이디)")
         void addMemberFailTest3() throws Exception {
             //given
-            given(userRepository.findById(any())).willReturn(Optional.of(getTestUser()));
-            doThrow(new ResourceNotFoundException(NOT_FOUND_USER_ID_IN_GROUP)).when(teamService).addMember(any(), any());
+            User testUser = getTestUser();
+            given(userRepository.findById(any())).willReturn(Optional.of(testUser));
+            doThrow(new ResourceNotFoundException(NOT_FOUND_USER_ID_IN_GROUP)).when(teamService).addMember(testUser,anyString(), anyLong());
             TeamAddMemberRequestDto dto = TeamAddMemberRequestDto.builder()
-                    .memberId(12345L)
+                    .memberNickName("test")
                     .teamId(1L)
                     .build();
             //when
@@ -526,7 +529,7 @@ class TeamControllerTest {
             //given
             given(userRepository.findById(any())).willReturn(Optional.of(getTestUser()));
             TeamAddMemberRequestDto dto = TeamAddMemberRequestDto.builder()
-                    .memberId(12345L)
+                    .memberNickName("test")
                     .build();
             //when
             ResultActions res = mockMvc.perform(
@@ -553,7 +556,7 @@ class TeamControllerTest {
             //given
             given(userRepository.findById(any())).willReturn(Optional.of(getTestUser()));
             TeamAddMemberRequestDto dto = TeamAddMemberRequestDto.builder()
-                    .memberId(12345L)
+                    .memberNickName("test")
                     .teamId(1L)
                     .build();
 
