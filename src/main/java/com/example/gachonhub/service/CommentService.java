@@ -23,7 +23,7 @@ public class CommentService {
 
     public void saveComment(User user, CommentRequestDto dto) {
         PostQuestion questionById = findQuestionById(dto.getQuestionId());
-        Comment commentById = findCommentById(dto.getParentCommentId());
+        Comment commentById = (dto.getParentCommentId() != null) ? findCommentById(dto.getParentCommentId()) : null;
         Comment comment = dto.toEntity(user, questionById, commentById);
         commentRepository.save(comment);
     }
@@ -32,14 +32,14 @@ public class CommentService {
         PostQuestion questionById = findQuestionById(dto.getQuestionId());
         Comment commentById = findCommentById(dto.getId());
         isCorrectAuthor(user.getId(), commentById.getUserId().getId());
-        Comment parent = findCommentById(dto.getParentCommentId());
+        Comment parent = (dto.getParentCommentId() != null) ? findCommentById(dto.getParentCommentId()) : null;
         Comment comment = dto.toEntity(user, questionById, parent);
         commentRepository.save(comment);
     }
 
     public void deleteComment(User user, Long id)  {
         Comment commentById = findCommentById(id);
-        isCorrectAuthor(user.getId(), commentById.getId());
+        isCorrectAuthor(user.getId(), commentById.getUserId().getId());
         commentRepository.deleteById(id);
     }
 

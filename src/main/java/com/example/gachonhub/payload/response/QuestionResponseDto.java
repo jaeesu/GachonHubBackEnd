@@ -65,8 +65,9 @@ public class QuestionResponseDto {
 
         private Long id;
         private String userId;
+        private String content;
         private Long questionId;
-        private Long superCommnetId;
+        private long superCommnetId;
         private LocalDate writeAt;
         private List<LikesResponseDto> likesList;
 
@@ -78,8 +79,9 @@ public class QuestionResponseDto {
         public CommentResponseDto(Comment comment) {
             this.id = comment.getId();
             this.userId = comment.getUserId().getNickname();
+            this.content = comment.getContent();
             this.questionId = comment.getPostQuestionId().getId();
-            this.superCommnetId = comment.getParentComment().getId();
+            this.superCommnetId = (Optional.ofNullable(comment.getParentComment()).isPresent()) ? comment.getParentComment().getId() : 0;
             this.writeAt = comment.getWriteAt().toLocalDateTime().toLocalDate();
             this.likesList = comment.getLikesList().stream()
                     .map(LikesResponseDto::new).collect(Collectors.toList());

@@ -32,6 +32,7 @@ public class CommentRequestDto {
         return Comment.builder()
                 .id(this.id)
                 .userId(user)
+                .content(this.content)
                 .postQuestionId(postQuestion)
                 .parentComment(parentComment)
                 .build();

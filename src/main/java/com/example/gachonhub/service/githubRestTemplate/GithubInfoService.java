@@ -64,7 +64,7 @@ public class GithubInfoService {
     class commitInfoUser {
         Long id;
         String nickname;
-        Long commit;
+        Long commit = 0L;
         Long lastCommit;
     }
 }
