@@ -1,7 +1,8 @@
 package com.example.gachonhub.domain.commitInfo.dto;
 
+import com.example.gachonhub.domain.team.Team;
 import com.example.gachonhub.domain.user.User;
-import com.example.gachonhub.domain.user.userInfo.UserRepos;
+import com.example.gachonhub.domain.user.userInfo.GithubRepos;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -22,8 +23,8 @@ public class GithubRepositoryDto {
     private String visibility;
     private Timestamp updated_at;
 
-    public UserRepos toEntity(User user) {
-        return UserRepos.builder()
+    public GithubRepos toEntity(User user) {
+        return GithubRepos.builder()
                 .id(this.id)
                 .user(user)
                 .url(this.html_url)
@@ -35,4 +36,19 @@ public class GithubRepositoryDto {
                 .updatedAt(this.updated_at)
                 .build();
     }
+
+    public GithubRepos toEntity(Team team) {
+        return GithubRepos.builder()
+                .id(this.id)
+                .team(team)
+                .url(this.html_url)
+                .name(this.name)
+                .fullName(this.full_name)
+                .description(this.description)
+                .main(false)
+                .visibility(this.visibility)
+                .updatedAt(this.updated_at)
+                .build();
+    }
+
 }

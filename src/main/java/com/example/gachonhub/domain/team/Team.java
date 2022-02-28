@@ -1,6 +1,7 @@
 package com.example.gachonhub.domain.team;
 
 import com.example.gachonhub.domain.user.relation.UserToTeam;
+import com.example.gachonhub.domain.user.userInfo.GithubRepos;
 import lombok.*;
 
 import javax.persistence.*;
@@ -42,9 +43,8 @@ public class Team {
     private TeamType type;
 
     @Setter
-    private String mainImage;
+    private String avatarUrl;
 
-    @Column(name = "commit_count")
     private Long commitCount; //d 0
 
     @Setter
@@ -56,6 +56,10 @@ public class Team {
     @Builder.Default
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserToTeam> users = new HashSet<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<GithubRepos> reposList = new HashSet<>();
 
     public enum TeamType {
         STUDY, CREW

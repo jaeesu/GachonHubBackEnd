@@ -2,6 +2,7 @@ package com.example.gachonhub.payload.response;
 
 import com.example.gachonhub.domain.team.Team;
 import com.example.gachonhub.domain.user.User;
+import com.example.gachonhub.domain.user.userInfo.GithubRepos;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -21,11 +22,12 @@ public class TeamResponseDto {
     private Integer people;
     private String repos;
     private String type;
-    private String mainImage;
+    private String avatarUrl;
     private String description;
     private Long commitCount;
     private boolean recruiting;
     private List<TeamMemberDto> users;
+    private List<TeamReposDto> reposList;
 
     public static TeamResponseDto fromEntity(Team team) {
 
@@ -37,12 +39,15 @@ public class TeamResponseDto {
                 .people(team.getPeople())
                 .repos(team.getRepos())
                 .type(team.getType().name())
-                .mainImage(team.getMainImage())
+                .avatarUrl(team.getAvatarUrl())
                 .description(team.getDescription())
                 .commitCount(team.getCommitCount())
                 .recruiting(team.isRecruiting())
                 .users(team.getUsers().stream()
                         .map(x -> new TeamMemberDto(x.getUser()))
+                        .collect(Collectors.toList()))
+                .reposList(team.getReposList().stream()
+                        .map(TeamReposDto::new)
                         .collect(Collectors.toList()))
                 .build();
     }
@@ -57,6 +62,27 @@ public class TeamResponseDto {
             this.id = user.getId();
             this.nickname = user.getNickname();
             this.avatarUrl = user.getAvatarUrl();
+        }
+    }
+
+    @Getter
+    static class TeamReposDto{
+        private Long id;
+        private String url;
+        private String name;
+        private String description;
+        private String lang;
+        private boolean main;
+        private String visibility;
+
+        public TeamReposDto(GithubRepos githubRepos) {
+            this.id = githubRepos.getId();
+            this.url = githubRepos.getUrl();
+            this.name = githubRepos.getName();
+            this.description = githubRepos.getDescription();
+            this.lang = githubRepos.getLang();
+            this.main = githubRepos.isMain();
+            this.visibility = githubRepos.getVisibility();
         }
     }
 

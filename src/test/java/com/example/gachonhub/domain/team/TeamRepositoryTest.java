@@ -145,7 +145,7 @@ class TeamRepositoryTest {
                 .people(5)
                 .repos("http://repos.com")
                 .type(Team.TeamType.CREW)
-                .mainImage("http://repos.com")
+                .avatarUrl("http://repos.com")
                 .build();
         entityManager.persist(team);
         return team;

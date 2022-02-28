@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.example.gachonhub.payload.response.ResponseUtil.success;
@@ -29,12 +30,20 @@ public class GithubRestTemplateController {
     public ResponseEntity<?> getGithubRepos(@CurrentUser UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
         githubInfoService.saveUserCommitInfo(user);;
-        return success("깃허브 레포지토리, 커밋 정보 연동 완료");
+        return success("개인 프로필 깃허브 레포지토리, 커밋 정보 연동 완료");
     }
 
     @GetMapping("/rank")
     public ResponseEntity<?> getCommitRank() {
         return success(githubInfoService.getUserCommitRank());
+    }
+
+
+    @GetMapping("/team/repos")
+    public ResponseEntity<?> getOrganizationRepos(@CurrentUser UserPrincipal userPrincipal, @RequestParam("team") Long teamId) {
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
+        githubInfoService.saveOrgCommitInfo(user, teamId);
+        return success("그룹 프로필 깃허브 레포지토리, 커밋 정보 연동 완료");
     }
 
 }

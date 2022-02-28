@@ -1,9 +1,8 @@
 package com.example.gachonhub.domain.user;
 
 
-import com.example.gachonhub.domain.commitInfo.CommitInfo;
 import com.example.gachonhub.domain.user.relation.UserToTeam;
-import com.example.gachonhub.domain.user.userInfo.UserRepos;
+import com.example.gachonhub.domain.user.userInfo.GithubRepos;
 import com.example.gachonhub.domain.user.userInfo.UserSns;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -64,7 +63,7 @@ public class User {
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private Set<UserRepos> repos = new HashSet<>();
+    private Set<GithubRepos> repos = new HashSet<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)

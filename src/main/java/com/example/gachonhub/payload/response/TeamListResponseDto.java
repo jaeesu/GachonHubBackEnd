@@ -34,7 +34,7 @@ public class TeamListResponseDto {
         private String field;
         private String description;
         private String type;
-        private String mainImage;
+        private String avatarUrl;
         private boolean recruiting;
 
         public ListTeamDto(Team team) {
@@ -45,7 +45,7 @@ public class TeamListResponseDto {
             this.field = team.getField();
             this.description = team.getDescription();
             this.type = team.getType().name();
-            this.mainImage = team.getMainImage();
+            this.avatarUrl = team.getAvatarUrl();
             this.recruiting = team.isRecruiting();
         }
 

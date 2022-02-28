@@ -1,6 +1,7 @@
 package com.example.gachonhub.domain.commitInfo.dto;
 
 import com.example.gachonhub.domain.commitInfo.CommitInfo;
+import com.example.gachonhub.domain.team.Team;
 import com.example.gachonhub.domain.user.User;
 import lombok.*;
 
@@ -41,6 +42,16 @@ public class CommitInfoDto {
                 .message(this.commit.message)
                 .date(this.commit.author.date)
                 .userId(user)
+                .build();
+
+    }
+
+    public CommitInfo toEntity(Team team) {
+        return CommitInfo.builder()
+                .sha(this.sha)
+                .message(this.commit.message)
+                .date(this.commit.author.date)
+                .teamId(team)
                 .build();
 
     }

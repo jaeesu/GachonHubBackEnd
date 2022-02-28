@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserReposCustomRepository {
+public interface GithubReposCustomRepository {
 
-    void updateMainRepository(User user, List<Long> repos);
+    void updateMainRepository(List<Long> repos);
 }

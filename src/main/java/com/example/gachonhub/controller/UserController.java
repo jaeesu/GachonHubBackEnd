@@ -3,17 +3,14 @@ package com.example.gachonhub.controller;
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.domain.user.UserRepository;
 import com.example.gachonhub.exception.ResourceNotFoundException;
-import com.example.gachonhub.payload.request.ReposRequestDto;
 import com.example.gachonhub.payload.request.UserInfoRequestDto;
-import com.example.gachonhub.payload.response.ResponseUtil;
 import com.example.gachonhub.payload.response.UserResponseDto;
 import com.example.gachonhub.security.CurrentUser;
 import com.example.gachonhub.security.UserPrincipal;
-import com.example.gachonhub.service.UserReposService;
+import com.example.gachonhub.service.GithubReposService;
 import com.example.gachonhub.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,7 +25,7 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final UserService userService;
-    private final UserReposService reposService;
+    private final GithubReposService reposService;
 
     @GetMapping
     public ResponseEntity<?> getUserProfile(@RequestParam("id") Long id) {
@@ -42,7 +39,7 @@ public class UserController {
     public ResponseEntity<?> updateUserSns(@CurrentUser UserPrincipal userPrincipal, @RequestBody @Valid UserInfoRequestDto dto) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
         userService.updateUserProfile(user, dto);
-        reposService.updateMainRepository(user, dto.getRepos());
+        reposService.updateUserMainRepository(user, dto.getRepos());
         return success("사용자 정보 수정 완료");
     }
 

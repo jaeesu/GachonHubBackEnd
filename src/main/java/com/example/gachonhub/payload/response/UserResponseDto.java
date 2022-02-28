@@ -2,12 +2,11 @@ package com.example.gachonhub.payload.response;
 
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.domain.user.relation.UserToTeam;
-import com.example.gachonhub.domain.user.userInfo.UserRepos;
+import com.example.gachonhub.domain.user.userInfo.GithubRepos;
 import com.example.gachonhub.domain.user.userInfo.UserSns;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -76,7 +75,7 @@ public class UserResponseDto {
         private boolean main;
         private String updatedAt;
 
-        public UserReposDto(UserRepos repos) {
+        public UserReposDto(GithubRepos repos) {
             this.id = repos.getId();
             this.url = repos.getUrl();
             this.name = repos.getName();
@@ -98,7 +97,7 @@ public class UserResponseDto {
         public UserGroupDto(UserToTeam team) {
             this.id = team.getTeam().getId();
             this.name = team.getTeam().getName();
-            this.mainImage = team.getTeam().getMainImage();
+            this.mainImage = team.getTeam().getAvatarUrl();
             this.type = team.getTeam().getType().name();
         }
     }

@@ -1,5 +1,6 @@
 package com.example.gachonhub.service;
 
+import com.example.gachonhub.domain.commitInfo.dto.GithubOrganizationDto;
 import com.example.gachonhub.domain.team.Team;
 import com.example.gachonhub.domain.team.Team.TeamType;
 import com.example.gachonhub.domain.team.TeamRepository;
@@ -12,11 +13,13 @@ import com.example.gachonhub.payload.request.TeamAddMemberRequestDto;
 import com.example.gachonhub.payload.request.TeamRequestDto;
 import com.example.gachonhub.payload.response.TeamListResponseDto;
 import com.example.gachonhub.payload.response.TeamResponseDto;
+import com.example.gachonhub.service.githubRestTemplate.GithubRestTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +34,8 @@ public class TeamService {
 
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
-    private final AmazonS3Service s3Service;
+    private final GithubRestTemplate restTemplate;
+    private final GithubReposService githubReposService;
 
     public TeamListResponseDto findAllTeamsByPage(int page, String type) {
         PageRequest pageRequest = PageRequest.of(page, 15, Sort.by("id").descending());
@@ -46,21 +50,20 @@ public class TeamService {
 
     //그룹 저장하고 -> 해당 사람 그룹에 추가하기
     @Transactional
-    public void saveTeam(User user, TeamRequestDto dto) throws IllegalAccessException {
-        String url = (dto.getImage() != null) ? s3Service.uploadFile(dto.getImage()) : null;
-        Team team = dto.toEntity(user, url);
+    public void saveTeam(User user, TeamRequestDto dto) {
+        GithubOrganizationDto body = restTemplate.getOrgInfo(dto.getOrgName()).getBody();
+        Team team = dto.toEntity(user, body.getReposUrl(), body.getAvatarUrl());
         teamRepository.save(team);
         addMember(user, user.getNickname(), team.getId());
     }
 
     @Transactional
-    public void updateTeamInfo(User user, TeamRequestDto dto) throws IllegalAccessException {
+    public void updateTeamInfo(User user, TeamRequestDto dto) {
         Team team = findTeamById(dto.getTeamId());
         isCorrectAuthor(user.getId(), team.getAuthorId());
-
-        String url = (dto.getImage() != null) ? s3Service.uploadFile(dto.getImage()) : null;
-        dto.updateTeam(team, url);
+        dto.updateTeam(team);
         teamRepository.save(team);
+        githubReposService.updateGroupMainRepository(team, dto.getRepos());
     }
 
     @Transactional

@@ -3,6 +3,7 @@ package com.example.gachonhub.service.githubRestTemplate;
 import com.example.gachonhub.domain.commitInfo.dto.CommitInfoDto;
 import com.example.gachonhub.domain.commitInfo.dto.GithubOrganizationDto;
 import com.example.gachonhub.domain.commitInfo.dto.GithubRepositoryDto;
+import com.example.gachonhub.domain.team.Team;
 import com.example.gachonhub.domain.user.User;
 import com.example.gachonhub.security.AppProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,6 @@ import java.util.stream.Collectors;
 //@RequiredArgsConstructor
 public class GithubRestTemplate {
 
-
     private final AppProperties appProperties;
     private String baseuri;
 
@@ -48,27 +48,32 @@ public class GithubRestTemplate {
         return exchange.getBody();
     }
 
+    public List<CommitInfoDto> getRepositoryCommitByUser(User user, String repos_full_name) {
+        return getRepositoryCommit(user, repos_full_name).stream()
+                .filter(x -> x.getCommit().getAuthor().getName().equals(user.getNickname()))
+                .collect(Collectors.toList());
+    }
+
     public List<CommitInfoDto> getRepositoryCommit(User user, String repos_full_name) {
         //getcommits
 
         try {
             RestTemplate restTemplate = new RestTemplate();
             String[] repos = repos_full_name.split("/");
+            String owner = repos[0];
+            String repo = repos[1];
 
             String uri = UriComponentsBuilder.fromUriString("/repos")
                     .path("/{owner}")
                     .path("/{repos}")
                     .path("/commits")
-                    .buildAndExpand(repos[0], repos[1])
+                    .buildAndExpand(owner, repo)
                     .toUriString();
 
             ResponseEntity<List<CommitInfoDto>> exchange1 = restTemplate.exchange(baseuri + uri, HttpMethod.GET, httpEntity(user.getGithubToken()), new ParameterizedTypeReference<List<CommitInfoDto>>() {
             });
             List<CommitInfoDto> commitInfoList = exchange1.getBody();
-            List<CommitInfoDto> authorCommitInfoList = commitInfoList.stream()
-                    .filter(x -> x.getCommit().getAuthor().getName().equals(user.getNickname()))
-                    .collect(Collectors.toList());
-            return authorCommitInfoList;
+            return commitInfoList;
         } catch (HttpClientErrorException e) {
             e.printStackTrace();
             return new ArrayList<>();
@@ -76,15 +81,28 @@ public class GithubRestTemplate {
 
     }
 
-    public void getOrgs() {
+    public ResponseEntity<GithubOrganizationDto> getOrgInfo(String name) {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<List<GithubOrganizationDto>> exchange = restTemplate.exchange("https://api.github.com/user/orgs", HttpMethod.GET, httpEntity(" "), new ParameterizedTypeReference<List<GithubOrganizationDto>>() {
+        ResponseEntity<GithubOrganizationDto> exchange = restTemplate.exchange("https://api.github.com/orgs/" + name,
+                HttpMethod.GET, httpEntity(" "), new ParameterizedTypeReference<GithubOrganizationDto>() {
         });
-        List<GithubOrganizationDto> body = exchange.getBody();
-        for (int i = 0; i < body.size(); i++) {
-            ResponseEntity<String> exchange1 = restTemplate.exchange("https://api.github.com/orgs/" + body.get(i).getLogin() + "/repos", HttpMethod.GET, httpEntity(" "), String.class);
-            System.out.println(exchange1.getBody());
+
+        return exchange;
+    }
+
+    public List<GithubRepositoryDto> getOrgRepos(String name) {
+        try{
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<List<GithubRepositoryDto>> exchange = restTemplate.exchange("https://api.github.com/orgs/" + name + "/repos", HttpMethod.GET, httpEntity(" "), new ParameterizedTypeReference<List<GithubRepositoryDto>>() {
+            });
+            List<GithubRepositoryDto> body = exchange.getBody();
+            return body;
+        } catch (HttpClientErrorException e){
+            e.printStackTrace();
+            return new ArrayList<>();
         }
+
+
     }
 
     public HttpEntity httpEntity(String token) {
@@ -93,5 +111,6 @@ public class GithubRestTemplate {
         httpHeaders.add(HttpHeaders.AUTHORIZATION, "token " + token);
         return new HttpEntity(httpHeaders);
     }
+
 
 }

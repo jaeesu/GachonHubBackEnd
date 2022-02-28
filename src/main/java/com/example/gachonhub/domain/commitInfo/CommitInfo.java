@@ -1,5 +1,6 @@
 package com.example.gachonhub.domain.commitInfo;
 
+import com.example.gachonhub.domain.team.Team;
 import com.example.gachonhub.domain.user.User;
 import lombok.*;
 
@@ -24,4 +25,9 @@ public class CommitInfo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User userId;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team teamId;
 }
