@@ -19,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,20 +35,24 @@ public class GithubInfoService {
     private final CommitInfoRepository commitInfoRepository;
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
+    private LocalDateTime lastDate = LocalDate.now().minusDays(1L).atStartOfDay();
 
     public void saveUserCommitInfo(User user) {
         List<GithubRepos> githubRepos = saveGithubUserRepositories(user);
         githubRepos.stream()
                         .forEach(x -> saveGithubRepositoryCommits(user, x));
+
         user.setCommitCount(commitInfoRepository.countAllByUserId_Id(user.getId()));
+
 
     }
 
     public void saveOrgCommitInfo(User user, Long teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new ResourceNotFoundException(ErrorUtil.NOT_FOUND_GROUP_ID));
-        List<GithubRepos> githubRepos = saveOrganizationRepositories(team);
+        List<GithubRepos> githubRepos = saveOrganizationRepositories(user, team);
         githubRepos.stream()
                 .forEach(x -> saveOrganizationRepositoryCommits(user, team, x));
+        team.setCommitCount(commitInfoRepository.countAllByTeamId_Id(team.getId()));
     }
 
 
@@ -66,14 +72,8 @@ public class GithubInfoService {
         commitInfoRepository.saveAll(commitInfoSet);
     }
 
-    public List<commitInfoUser> getUserCommitRank() {
-        return userRepository.findAll(Sort.by(Sort.Direction.DESC, "commitCount"))
-                .stream().map(x -> new commitInfoUser(x.getId(), x.getNickname(), x.getCommitCount(), 999L))
-                .collect(Collectors.toList());
-    }
-
-    public List<GithubRepos> saveOrganizationRepositories(Team team) {
-        List<GithubRepositoryDto> orgRepos = githubRestTemplate.getOrgRepos(team.getRepos());
+    public List<GithubRepos> saveOrganizationRepositories(User user, Team team) {
+        List<GithubRepositoryDto> orgRepos = githubRestTemplate.getOrgRepos(user, team.getRepos());
         Set<GithubRepos> reposSet = orgRepos.stream()
                 .map(x -> x.toEntity(team))
                 .collect(Collectors.toSet());
@@ -90,12 +90,37 @@ public class GithubInfoService {
 
     }
 
+    public List<UserCommitInfoDto> getUserCommitRank() {
+
+        return userRepository.findAll(Sort.by(Sort.Direction.DESC, "commitCount"))
+                .stream().map(x -> new UserCommitInfoDto(x.getId(), x.getNickname(),
+                        commitInfoRepository.countAllByUserId_IdAndDateAfter(x.getId(), lastDate) ,x.getCommitCount()))
+                .collect(Collectors.toList());
+    }
+
+    public List<GroupCommitInfoDto> getGroupoCommitRank() {
+        return teamRepository.findAll(Sort.by(Sort.Direction.DESC, "commitCount"))
+                .stream().map(x -> new GroupCommitInfoDto(x.getId(), x.getName(),
+                        commitInfoRepository.countAllByTeamId_IdAndDateAfter(x.getId(), lastDate), x.getCommitCount()))
+                .collect(Collectors.toList());
+    }
+
     @Getter
     @AllArgsConstructor
-    class commitInfoUser {
+    class UserCommitInfoDto {
         Long id;
-        String nickname;
-        Long commit = 0L;
+        String name;
         Long lastCommit;
+        Long commit;
     }
+
+    @Getter
+    @AllArgsConstructor
+    class GroupCommitInfoDto {
+        Long id;
+        String name;
+        Long lastCommit;
+        Long commit;
+    }
+
 }

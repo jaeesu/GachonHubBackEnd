@@ -90,10 +90,10 @@ public class GithubRestTemplate {
         return exchange;
     }
 
-    public List<GithubRepositoryDto> getOrgRepos(String name) {
+    public List<GithubRepositoryDto> getOrgRepos(User user, String name) {
         try{
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<List<GithubRepositoryDto>> exchange = restTemplate.exchange("https://api.github.com/orgs/" + name + "/repos", HttpMethod.GET, httpEntity(" "), new ParameterizedTypeReference<List<GithubRepositoryDto>>() {
+            ResponseEntity<List<GithubRepositoryDto>> exchange = restTemplate.exchange("https://api.github.com/orgs/" + name + "/repos", HttpMethod.GET, httpEntity(user.getGithubToken()), new ParameterizedTypeReference<List<GithubRepositoryDto>>() {
             });
             List<GithubRepositoryDto> body = exchange.getBody();
             return body;

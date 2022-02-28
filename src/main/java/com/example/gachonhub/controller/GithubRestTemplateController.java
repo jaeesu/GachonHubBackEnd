@@ -29,13 +29,18 @@ public class GithubRestTemplateController {
     @GetMapping("/repos")
     public ResponseEntity<?> getGithubRepos(@CurrentUser UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException(NOT_FOUND_USER_ID));
-        githubInfoService.saveUserCommitInfo(user);;
+        githubInfoService.saveUserCommitInfo(user);
         return success("개인 프로필 깃허브 레포지토리, 커밋 정보 연동 완료");
     }
 
-    @GetMapping("/rank")
-    public ResponseEntity<?> getCommitRank() {
+    @GetMapping("/rank/personal")
+    public ResponseEntity<?> getPersonalCommitRank() {
         return success(githubInfoService.getUserCommitRank());
+    }
+
+    @GetMapping("/rank/groups")
+    public ResponseEntity<?> getGroupsCommitRank() {
+        return success(githubInfoService.getGroupoCommitRank());
     }
 
 

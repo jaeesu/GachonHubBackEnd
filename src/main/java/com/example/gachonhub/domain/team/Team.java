@@ -21,7 +21,6 @@ public class Team {
     @Column(name = "team_id")
     private Long id;
 
-    @Setter
     private String name;
 
     private Long authorId;
@@ -32,7 +31,6 @@ public class Team {
     @Setter
     private Integer people;
 
-    @Setter
     private String repos; //description => readme
 
     @Setter
@@ -42,9 +40,9 @@ public class Team {
     @Enumerated(EnumType.STRING)
     private TeamType type;
 
-    @Setter
     private String avatarUrl;
 
+    @Setter
     private Long commitCount; //d 0
 
     @Setter
