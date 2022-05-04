@@ -2,6 +2,7 @@ package com.example.gachonhub.question.domain;
 
 import com.example.gachonhub.category.domain.SubCategory;
 import com.example.gachonhub.comment.domain.Comment;
+import com.example.gachonhub.common.domain.BaseTimeEntity;
 import com.example.gachonhub.file.domain.UserFile;
 import com.example.gachonhub.likes.domain.Likes;
 import com.example.gachonhub.user.domain.User;
@@ -20,7 +21,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostQuestion {
+public class PostQuestion extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,10 +39,6 @@ public class PostQuestion {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private SubCategory categoryId;
-
-    @Column(name = "write_at")
-    @Builder.Default //createdDate로 바꿔야한다.
-    private Timestamp writeAt = new Timestamp(System.currentTimeMillis());
 
     @Builder.Default //애노테이션을 넣지 않으면 0이 들어가지 않는다.
     private Long hit = 0L;

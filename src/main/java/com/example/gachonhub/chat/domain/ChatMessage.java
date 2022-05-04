@@ -1,5 +1,6 @@
 package com.example.gachonhub.chat.domain;
 
+import com.example.gachonhub.common.domain.BaseTimeEntity;
 import com.example.gachonhub.user.domain.User;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatMessage {
+public class ChatMessage extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +28,4 @@ public class ChatMessage {
     private ChatRoom chatRoom;
 
     private String content;
-
-    private Timestamp sendAt;
-
-//    private boolean is_read;
 }

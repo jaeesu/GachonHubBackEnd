@@ -1,5 +1,6 @@
 package com.example.gachonhub.comment.domain;
 
+import com.example.gachonhub.common.domain.BaseTimeEntity;
 import com.example.gachonhub.likes.domain.Likes;
 import com.example.gachonhub.question.domain.PostQuestion;
 import com.example.gachonhub.user.domain.User;
@@ -15,7 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment {
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,10 +36,6 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
-
-    @Builder.Default
-    @Column(name = "write_at")
-    private Timestamp writeAt = new Timestamp(System.currentTimeMillis());
 
     @OneToMany(mappedBy = "parentComment")
     List<Likes> likesList = new ArrayList<>();
