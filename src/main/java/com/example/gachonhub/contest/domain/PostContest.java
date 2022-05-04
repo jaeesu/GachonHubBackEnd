@@ -1,6 +1,7 @@
 package com.example.gachonhub.contest.domain;
 
 import com.example.gachonhub.category.domain.SubCategory;
+import com.example.gachonhub.common.domain.BaseTimeEntity;
 import com.example.gachonhub.user.domain.User;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import java.sql.Timestamp;
 @Table(name = "post_contest")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostContest {
+public class PostContest extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +36,6 @@ public class PostContest {
     private SubCategory categoryId;
 
     private Integer hit;
-
-    @Builder.Default
-    private Timestamp writeAt = new Timestamp(System.currentTimeMillis());
 
     @Setter
     private String image;

@@ -1,5 +1,6 @@
 package com.example.gachonhub.notice.domain;
 
+import com.example.gachonhub.common.domain.BaseTimeEntity;
 import com.example.gachonhub.user.domain.User;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import java.sql.Timestamp;
 @Table(name = "post_notice")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostNotice {
+public class PostNotice extends BaseTimeEntity {
 
     //조회수??
 
@@ -28,8 +29,4 @@ public class PostNotice {
     private String title;
 
     private String content;
-
-    @Column(name = "write_at")
-    @Builder.Default
-    private Timestamp writeAt = new Timestamp(System.currentTimeMillis());;
 }

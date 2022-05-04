@@ -1,5 +1,6 @@
 package com.example.gachonhub.inquiry.domain;
 
+import com.example.gachonhub.common.domain.BaseTimeEntity;
 import com.example.gachonhub.user.domain.User;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import java.sql.Timestamp;
 @Table(name = "post_inquiry")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostInquiry {
+public class PostInquiry extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +30,6 @@ public class PostInquiry {
 
     @Column(name = "img_url")
     private String imgUrl;
-
-    @Column(name = "write_at")
-    @Builder.Default
-    private Timestamp writeAt = new Timestamp(System.currentTimeMillis());
 
     @Column(name = "password")
     private Integer password;

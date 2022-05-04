@@ -1,5 +1,6 @@
 package com.example.gachonhub.team.domain;
 
+import com.example.gachonhub.common.domain.BaseTimeEntity;
 import com.example.gachonhub.user.domain.UserToTeam;
 import com.example.gachonhub.user.domain.userInfo.GithubRepos;
 import lombok.*;
@@ -14,7 +15,7 @@ import java.util.Set;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "team")
-public class Team {
+public class Team extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,7 @@
 package com.example.gachonhub.user.domain;
 
 
+import com.example.gachonhub.common.domain.BaseTimeEntity;
 import com.example.gachonhub.user.domain.userInfo.GithubRepos;
 import com.example.gachonhub.user.domain.userInfo.UserSns;
 import lombok.*;
@@ -16,7 +17,7 @@ import java.util.*;
 @DynamicUpdate
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id
     @Column(name = "user_id")
@@ -43,8 +44,6 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    private String createdAt;
 
     @Setter
     private String githubToken;
