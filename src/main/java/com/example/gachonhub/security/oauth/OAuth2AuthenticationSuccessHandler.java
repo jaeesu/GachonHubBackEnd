@@ -22,8 +22,8 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static com.example.gachonhub.security.oauth.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
-import static com.example.gachonhub.util.Utils.TokenType.AUTHORIZATION;
-import static com.example.gachonhub.util.Utils.TokenType.REFRESH;
+import static com.example.gachonhub.redisTemplate.Utils.TokenType.AUTHORIZATION;
+import static com.example.gachonhub.redisTemplate.Utils.TokenType.REFRESH;
 
 @Component
 @Slf4j

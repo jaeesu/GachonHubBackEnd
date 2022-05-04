@@ -1,14 +1,14 @@
 package com.example.gachonhub.security.oauth;
 
-import com.example.gachonhub.domain.user.User;
-import com.example.gachonhub.domain.user.User.Role;
-import com.example.gachonhub.domain.user.UserRepository;
-import com.example.gachonhub.domain.user.userInfo.UserSns;
-import com.example.gachonhub.domain.user.userInfo.UserSns.SnsCategory;
+import com.example.gachonhub.user.domain.User;
+import com.example.gachonhub.user.domain.User.Role;
+import com.example.gachonhub.user.domain.UserRepository;
+import com.example.gachonhub.user.domain.userInfo.UserSns;
+import com.example.gachonhub.user.domain.userInfo.UserSns.SnsCategory;
 import com.example.gachonhub.exception.OAuth2AuthenticationProcessingException;
 import com.example.gachonhub.security.AppProperties;
 import com.example.gachonhub.security.UserPrincipal;
-import com.example.gachonhub.util.Utils;
+import com.example.gachonhub.redisTemplate.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;

@@ -1,7 +1,7 @@
 package com.example.gachonhub.security.oauth;
 
 import com.example.gachonhub.exception.OAuth2AuthenticationProcessingException;
-import com.example.gachonhub.util.Utils;
+import com.example.gachonhub.redisTemplate.Utils;
 
 import java.util.Map;
 

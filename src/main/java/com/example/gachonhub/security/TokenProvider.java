@@ -1,6 +1,6 @@
 package com.example.gachonhub.security;
 
-import com.example.gachonhub.util.Utils.TokenType;
+import com.example.gachonhub.redisTemplate.Utils.TokenType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
@@ -14,7 +14,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 
-import static com.example.gachonhub.util.Utils.TokenType.AUTHORIZATION;
+import static com.example.gachonhub.redisTemplate.Utils.TokenType.AUTHORIZATION;
 
 @Service
 @Slf4j
