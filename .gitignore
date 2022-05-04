@@ -43,3 +43,4 @@ gradlew
 *.bat
 .gradle/
 .gradle
+spy.log

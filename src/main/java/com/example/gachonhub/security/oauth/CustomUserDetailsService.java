@@ -1,7 +1,7 @@
 package com.example.gachonhub.security.oauth;
 
-import com.example.gachonhub.domain.user.User;
-import com.example.gachonhub.domain.user.UserRepository;
+import com.example.gachonhub.user.domain.User;
+import com.example.gachonhub.user.domain.UserRepository;
 import com.example.gachonhub.exception.ResourceNotFoundException;
 import com.example.gachonhub.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;

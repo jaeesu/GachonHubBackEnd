@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.example.gachonhub.util.Utils.TokenType.AUTHORIZATION;
+import static com.example.gachonhub.redisTemplate.Utils.TokenType.AUTHORIZATION;
 
 @Slf4j
 public class TokenAuthenticationFilter extends OncePerRequestFilter {

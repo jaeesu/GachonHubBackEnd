@@ -1,17 +1,14 @@
 package com.example.gachonhub.security.oauth;
 
-import com.example.gachonhub.domain.commitInfo.dto.GithubRepositoryDto;
-import com.example.gachonhub.domain.user.User;
-import com.example.gachonhub.domain.user.User.Role;
-import com.example.gachonhub.domain.user.UserRepository;
-import com.example.gachonhub.domain.user.userInfo.UserRepos;
-import com.example.gachonhub.domain.user.userInfo.UserSns;
-import com.example.gachonhub.domain.user.userInfo.UserSns.SnsCategory;
+import com.example.gachonhub.user.domain.User;
+import com.example.gachonhub.user.domain.User.Role;
+import com.example.gachonhub.user.domain.UserRepository;
+import com.example.gachonhub.user.domain.userInfo.UserSns;
+import com.example.gachonhub.user.domain.userInfo.UserSns.SnsCategory;
 import com.example.gachonhub.exception.OAuth2AuthenticationProcessingException;
 import com.example.gachonhub.security.AppProperties;
 import com.example.gachonhub.security.UserPrincipal;
-import com.example.gachonhub.service.githubRestTemplate.GithubRestTemplate;
-import com.example.gachonhub.util.Utils;
+import com.example.gachonhub.redisTemplate.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -24,16 +21,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    private final GithubRestTemplate githubRestTemplate;
     private final UserRepository userRepository;
     private final AppProperties appProperties;
 
@@ -100,11 +94,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (userSns != null) {
             user.getSns().add(userSns);
         }
-
-        List<GithubRepositoryDto> githubRepositories = githubRestTemplate.getUserGithubRepositories(user);
-        githubRepositories.stream()
-                .map(x -> x.toEntity(user))
-                .forEach(x -> user.getRepos().add(x));
 
         userRepository.save(user);
 
