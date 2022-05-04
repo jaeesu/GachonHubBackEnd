@@ -12,7 +12,6 @@ import javax.validation.constraints.Null;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NoticeRequestDto {

@@ -20,10 +20,10 @@ public class NoticeResponseDto {
     public static NoticeResponseDto fromNotice(PostNotice notice) {
         return NoticeResponseDto.builder()
                 .id(notice.getId())
-                .user(notice.getUserId().getNickname())
+                .user(notice.getUser().getNickname())
                 .title(notice.getTitle())
                 .content(notice.getContent())
-                .writeAt(notice.getWriteAt().toLocalDateTime().toLocalDate())
+                .writeAt(notice.getCreatedAt().toLocalDate())
                 .build();
     }
 

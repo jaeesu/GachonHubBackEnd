@@ -35,7 +35,7 @@ public class InquiryListResponseDto {
 
         public ListInquiryDto(PostInquiry inquiry) {
             this.id = inquiry.getId();
-            this.userId = inquiry.getUserId().getNickname();
+            this.userId = inquiry.getUser().getNickname();
             this.title = inquiry.getTitle();
         }
     }

@@ -84,7 +84,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .avatarUrl(oAuth2UserInfo.getImageUrl())
                 .company(oAuth2UserInfo.getCompany())
                 .graduate(true)
-                .createdAt(oAuth2UserInfo.getCreatedAt())
                 .description(oAuth2UserInfo.getBio())
                 .role(role)
                 .githubToken(oAuth2UserRequest.getAccessToken().getTokenValue())

@@ -39,7 +39,7 @@ public class UserResponseDto {
                 .major(user.getMajor())
                 .graduate(user.getGraduate())
                 .role(user.getRole().name())
-                .createdAt(user.getCreatedAt())
+                .createdAt(user.getCreatedAt().toString())
                 .sns(user.getSns().stream()
                         .map(UserSnsDto::new).collect(Collectors.toSet()))
                 .repos(user.getRepos().stream()

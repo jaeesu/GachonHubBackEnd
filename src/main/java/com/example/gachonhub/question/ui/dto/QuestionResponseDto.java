@@ -31,11 +31,11 @@ public class QuestionResponseDto {
 
     public QuestionResponseDto(PostQuestion postQuestion) {
         this.id = postQuestion.getId();
-        this.user = postQuestion.getUserId().getNickname();
+        this.user = postQuestion.getUser().getNickname();
         this.title = postQuestion.getTitle();
         this.content = postQuestion.getContent();
         this.category = postQuestion.getCategoryId();
-        this.writeAt = postQuestion.getWriteAt().toLocalDateTime().toLocalDate();
+        this.writeAt = postQuestion.getCreatedAt().toLocalDate();
         this.hit = postQuestion.getHit();
         this.fileList = postQuestion.getUserFileList().stream()
                 .map(FileResponseDto::new).collect(Collectors.toList());
@@ -82,7 +82,7 @@ public class QuestionResponseDto {
             this.content = comment.getContent();
             this.questionId = comment.getPostQuestionId().getId();
             this.superCommnetId = (Optional.ofNullable(comment.getParentComment()).isPresent()) ? comment.getParentComment().getId() : 0;
-            this.writeAt = comment.getWriteAt().toLocalDateTime().toLocalDate();
+            this.writeAt = comment.getCreatedAt().toLocalDate();
             this.likesList = comment.getLikesList().stream()
                     .map(LikesResponseDto::new).collect(Collectors.toList());
         }

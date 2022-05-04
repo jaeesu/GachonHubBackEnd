@@ -23,11 +23,11 @@ public class InquiryResponseDto {
     public static InquiryResponseDto fromInquiry(PostInquiry inquiry) {
         return InquiryResponseDto.builder()
                 .id(inquiry.getId())
-                .user(inquiry.getUserId().getNickname())
+                .user(inquiry.getUser().getNickname())
                 .title(inquiry.getTitle())
                 .content(inquiry.getContent())
                 .img(inquiry.getImgUrl())
-                .writeAt(inquiry.getWriteAt().toLocalDateTime().toLocalDate())
+                .writeAt(inquiry.getCreatedAt().toLocalDate())
                 .password(inquiry.getPassword())
                 .secret(inquiry.isSecret())
                 .build();
