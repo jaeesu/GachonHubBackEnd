@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.springframework.data.domain.Page;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class QuestionListResponseDto {
         private String category;
         private Long hit;
         private Long likes;
-        private Timestamp writeAt;
+        private LocalDateTime writeAt;
 
         public ListQuestionDto(PostQuestion postQuestion) {
             this.id = postQuestion.getId();
@@ -39,7 +40,7 @@ public class QuestionListResponseDto {
             this.category = postQuestion.getCategoryId().getName();
             this.hit = postQuestion.getHit();
             this.likes = (long) postQuestion.getLikesList().size();
-            this.writeAt = postQuestion.getWriteAt();
+            this.writeAt = postQuestion.getCreatedAt();
 
         }
     }

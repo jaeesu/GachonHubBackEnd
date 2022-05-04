@@ -29,7 +29,7 @@ public class ContestResponseDto {
                 .category(contest.getCategoryId().getName())
                 .image(contest.getImage())
                 .hit(contest.getHit())
-                .writeAt(contest.getWriteAt().toLocalDateTime().toLocalDate())
+                .writeAt(contest.getCreatedAt().toLocalDate())
                 .build();
 
     }

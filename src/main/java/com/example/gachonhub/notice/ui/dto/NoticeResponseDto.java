@@ -23,7 +23,7 @@ public class NoticeResponseDto {
                 .user(notice.getUserId().getNickname())
                 .title(notice.getTitle())
                 .content(notice.getContent())
-                .writeAt(notice.getWriteAt().toLocalDateTime().toLocalDate())
+                .writeAt(notice.getCreatedAt().toLocalDate())
                 .build();
     }
 

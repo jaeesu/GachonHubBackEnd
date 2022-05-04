@@ -27,7 +27,7 @@ public class InquiryResponseDto {
                 .title(inquiry.getTitle())
                 .content(inquiry.getContent())
                 .img(inquiry.getImgUrl())
-                .writeAt(inquiry.getWriteAt().toLocalDateTime().toLocalDate())
+                .writeAt(inquiry.getCreatedAt().toLocalDate())
                 .password(inquiry.getPassword())
                 .secret(inquiry.isSecret())
                 .build();
