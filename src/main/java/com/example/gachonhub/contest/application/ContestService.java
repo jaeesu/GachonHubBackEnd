@@ -63,7 +63,7 @@ public class ContestService {
         isCorrectAuthor(user.getId(), contest.getUser().getId());
         String url = amazonS3Service.uploadFile(dto.getImage());
         SubCategory category = categoryService.findById(dto.getCategory());
-        dto.updateEntity(contest, category, url);
+        contest.updateFromDto(dto, category, url);
         contestRepository.save(contest);
     }
 

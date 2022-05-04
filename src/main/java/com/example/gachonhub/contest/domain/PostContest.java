@@ -1,34 +1,20 @@
 package com.example.gachonhub.contest.domain;
 
 import com.example.gachonhub.category.domain.SubCategory;
-import com.example.gachonhub.common.domain.BaseTimeEntity;
+import com.example.gachonhub.contest.ui.dto.ContestRequestDto;
+import com.example.gachonhub.post.domain.Post;
 import com.example.gachonhub.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 @Getter
-@Builder
+@Setter(AccessLevel.PRIVATE)
 @Table(name = "post_contest")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostContest extends BaseTimeEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_contest_id")
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @Setter
-    private String title;
-    @Setter
-    private String content;
+public class PostContest extends Post {
 
     @Setter
     @ManyToOne
@@ -40,4 +26,18 @@ public class PostContest extends BaseTimeEntity {
     @Setter
     private String image;
 
+    @Builder
+    public PostContest(Long id, User userId, String title, String content, SubCategory categoryId, Integer hit, String image) {
+        super(id, userId, title, content);
+        this.categoryId = categoryId;
+        this.hit = hit;
+        this.image = image;
+    }
+
+    public void updateFromDto(ContestRequestDto dto, SubCategory category, String url) {
+        this.setTitle(dto.getTitle());
+        this.setContent(dto.getContent());
+        this.setCategoryId(category);
+        this.setImage(url);
+    }
 }

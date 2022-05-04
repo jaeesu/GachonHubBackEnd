@@ -36,7 +36,7 @@ public class QuestionListResponseDto {
         public ListQuestionDto(PostQuestion postQuestion) {
             this.id = postQuestion.getId();
             this.title = postQuestion.getTitle();
-            this.user = postQuestion.getUserId().getNickname();
+            this.user = postQuestion.getUser().getNickname();
             this.category = postQuestion.getCategoryId().getName();
             this.hit = postQuestion.getHit();
             this.likes = (long) postQuestion.getLikesList().size();

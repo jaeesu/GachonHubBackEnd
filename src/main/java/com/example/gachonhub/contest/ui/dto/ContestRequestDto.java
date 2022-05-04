@@ -32,7 +32,7 @@ public class ContestRequestDto {
 
     public PostContest toEntity(User user, SubCategory category, String url) {
         return PostContest.builder()
-                .user(user)
+                .userId(user)
                 .title(this.title)
                 .content(this.content)
                 .categoryId(category)
@@ -42,10 +42,5 @@ public class ContestRequestDto {
 
     }
 
-    public void updateEntity(PostContest contest, SubCategory category, String url) {
-        contest.setTitle(this.title);
-        contest.setContent(this.content);
-        contest.setCategoryId(category);
-        contest.setImage(url);
-    }
+
 }

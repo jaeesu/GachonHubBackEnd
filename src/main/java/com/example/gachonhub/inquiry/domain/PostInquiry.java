@@ -1,32 +1,19 @@
 package com.example.gachonhub.inquiry.domain;
 
-import com.example.gachonhub.common.domain.BaseTimeEntity;
+import com.example.gachonhub.post.domain.Post;
 import com.example.gachonhub.user.domain.User;
 import lombok.*;
 
-import javax.persistence.*;
-import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Getter
-@Builder
 @Table(name = "post_inquiry")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostInquiry extends BaseTimeEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_inquiry_id")
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User userId;
-
-    private String title;
-
-    private String content;
+public class PostInquiry extends Post {
 
     @Column(name = "img_url")
     private String imgUrl;
@@ -36,4 +23,12 @@ public class PostInquiry extends BaseTimeEntity {
 
     @Column(name = "secret")
     private boolean secret;
+
+    @Builder
+    public PostInquiry(Long id, User userId, String title, String content, String imgUrl, Integer password, boolean secret) {
+        super(id, userId, title, content);
+        this.imgUrl = imgUrl;
+        this.password = password;
+        this.secret = secret;
+    }
 }

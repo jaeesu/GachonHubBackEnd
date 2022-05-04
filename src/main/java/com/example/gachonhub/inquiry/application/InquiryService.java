@@ -47,14 +47,14 @@ public class InquiryService {
 
     public void deletePost(User user, Long id)  {
         PostInquiry postInquiry = findInquiryPostById(id);
-        isCorrectAuthor(user.getId(), postInquiry.getUserId().getId());
+        isCorrectAuthor(user.getId(), postInquiry.getUser().getId());
         s3Service.deleteFromS3(postInquiry.getImgUrl());
         inquiryRepository.deleteById(id);
     }
 
     public void updatePost(User user, InquiryRequestDto dto) {
         PostInquiry postInquiry = findInquiryPostById(dto.getId());
-        isCorrectAuthor(user.getId(), postInquiry.getUserId().getId());
+        isCorrectAuthor(user.getId(), postInquiry.getUser().getId());
         s3Service.deleteFromS3(postInquiry.getImgUrl());
         savePost(user, dto);
     }

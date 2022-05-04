@@ -34,7 +34,7 @@ public class NoticeListResponseDto {
 
         public ListNoticeDto(PostNotice notice) {
             this.id = notice.getId();
-            this.user = notice.getUserId().getNickname();
+            this.user = notice.getUser().getNickname();
             this.title = notice.getTitle();
         }
     }

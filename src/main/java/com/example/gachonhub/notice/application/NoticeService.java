@@ -42,13 +42,13 @@ public class NoticeService {
 
     public void deleteNoticePost(User user, Long id) {
         PostNotice noticePostById = findNoticePostById(id);
-        isCorrectAuthor(user.getId(), noticePostById.getUserId().getId());
+        isCorrectAuthor(user.getId(), noticePostById.getUser().getId());
         noticeRepository.deleteById(id);
     }
 
     public void updateNoticePost(User user, NoticeRequestDto dto)  {
         PostNotice noticePostById = findNoticePostById(dto.getId());
-        isCorrectAuthor(user.getId(), noticePostById.getUserId().getId());
+        isCorrectAuthor(user.getId(), noticePostById.getUser().getId());
         noticeRepository.save(dto.toEntity(user));
     }
 

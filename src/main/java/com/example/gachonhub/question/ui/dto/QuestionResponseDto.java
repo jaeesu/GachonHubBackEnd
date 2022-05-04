@@ -31,7 +31,7 @@ public class QuestionResponseDto {
 
     public QuestionResponseDto(PostQuestion postQuestion) {
         this.id = postQuestion.getId();
-        this.user = postQuestion.getUserId().getNickname();
+        this.user = postQuestion.getUser().getNickname();
         this.title = postQuestion.getTitle();
         this.content = postQuestion.getContent();
         this.category = postQuestion.getCategoryId();
